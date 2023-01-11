@@ -35,7 +35,8 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
 
             foreach (var operation in operationsToCalculate)
             {
-                var calculator = GetCalculator(operation.Type);
+                var calculator = _transactionCalculators
+                    .Single(x => x.CanCalculate(operation.Type));
 
                 var calculatedTransactions = calculator
                     .Calculate(operation, buyOperationsIterator, childOperationsProvider);
@@ -45,11 +46,6 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
                     yield return transaction;
                 }
             }
-        }
-
-        private ITransactionCalculator GetCalculator(OperationType operationType)
-        {
-            return _transactionCalculators.Single(x => x.CanCalculate(operationType));
         }
 
         private bool NeedCalculate(Operation operation, int year)
