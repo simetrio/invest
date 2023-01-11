@@ -1,4 +1,6 @@
-namespace Invest.TaxCalculator.BusinessLogic
+using Invest.TaxCalculator.BusinessLogic.Operations;
+
+namespace Invest.TaxCalculator.BusinessLogic.Providers
 {
     /// <summary>
     ///     Провайдер дочерних транзакций

@@ -1,4 +1,4 @@
-namespace Invest.TaxCalculator.BusinessLogic
+namespace Invest.TaxCalculator.BusinessLogic.Transactions
 {
     /// <summary>
     ///     Сделка по купле продаже облигации

@@ -1,4 +1,7 @@
-namespace Invest.TaxCalculator.BusinessLogic
+using Invest.TaxCalculator.BusinessLogic.Operations;
+using Invest.TaxCalculator.BusinessLogic.Providers;
+
+namespace Invest.TaxCalculator.BusinessLogic.Transactions
 {
     /// <summary>
     ///     Интерфейс калькулятора транзакций

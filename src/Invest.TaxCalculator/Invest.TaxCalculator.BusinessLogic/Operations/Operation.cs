@@ -1,6 +1,6 @@
 using System;
 
-namespace Invest.TaxCalculator.BusinessLogic
+namespace Invest.TaxCalculator.BusinessLogic.Operations
 {
     /// <summary>
     ///     Операция

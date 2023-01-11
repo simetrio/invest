@@ -1,9 +1,13 @@
-namespace Invest.TaxCalculator.BusinessLogic
+using Invest.TaxCalculator.BusinessLogic.Operations;
+using Invest.TaxCalculator.BusinessLogic.Providers;
+using Invest.TaxCalculator.BusinessLogic.Transactions;
+
+namespace Invest.TaxCalculator.BusinessLogic.CalculateTransactions
 {
     /// <summary>
-    ///     Калькулятор транзакции гашение облигации
+    ///     Калькулятор транзакции купона
     /// </summary>
-    public class BondCancellationTransactionCalculator : ITransactionCalculator
+    public class BondCouponsTransactionCalculator : ITransactionCalculator
     {
         public bool CanCalculate(OperationType operationType)
         {

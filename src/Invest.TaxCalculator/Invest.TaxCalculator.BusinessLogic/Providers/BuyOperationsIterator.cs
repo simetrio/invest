@@ -1,4 +1,7 @@
-namespace Invest.TaxCalculator.BusinessLogic
+using Invest.TaxCalculator.BusinessLogic.Operations;
+using Invest.TaxCalculator.BusinessLogic.Transactions;
+
+namespace Invest.TaxCalculator.BusinessLogic.Providers
 {
     /// <summary>
     ///     По методу FIFO отдает покупки

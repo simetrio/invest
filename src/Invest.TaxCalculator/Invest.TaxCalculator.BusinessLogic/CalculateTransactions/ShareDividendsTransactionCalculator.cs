@@ -1,4 +1,8 @@
-namespace Invest.TaxCalculator.BusinessLogic
+using Invest.TaxCalculator.BusinessLogic.Operations;
+using Invest.TaxCalculator.BusinessLogic.Providers;
+using Invest.TaxCalculator.BusinessLogic.Transactions;
+
+namespace Invest.TaxCalculator.BusinessLogic.CalculateTransactions
 {
     /// <summary>
     ///     Калькулятор транзакции дивидендов

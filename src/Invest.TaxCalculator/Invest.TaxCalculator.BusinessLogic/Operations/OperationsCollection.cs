@@ -1,4 +1,4 @@
-namespace Invest.TaxCalculator.BusinessLogic
+namespace Invest.TaxCalculator.BusinessLogic.Operations
 {
     /// <summary>
     ///     Коллекция операций
