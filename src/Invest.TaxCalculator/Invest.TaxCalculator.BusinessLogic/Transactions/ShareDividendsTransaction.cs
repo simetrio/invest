@@ -5,5 +5,6 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions
     /// </summary>
     public class ShareDividendsTransaction : ITransaction
     {
+        public TransactionOperation[] Operations { get; set; }
     }
 }

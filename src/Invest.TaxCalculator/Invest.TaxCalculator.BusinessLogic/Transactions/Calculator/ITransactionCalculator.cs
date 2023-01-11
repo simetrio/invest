@@ -1,7 +1,8 @@
+using System.Collections.Generic;
 using Invest.TaxCalculator.BusinessLogic.Operations;
 using Invest.TaxCalculator.BusinessLogic.Providers;
 
-namespace Invest.TaxCalculator.BusinessLogic.Transactions
+namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
 {
     /// <summary>
     ///     Интерфейс калькулятора транзакций
@@ -10,7 +11,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions
     {
         bool CanCalculate(OperationType operationType);
 
-        ITransaction Calculate(
+        IEnumerable<ITransaction> Calculate(
             Operation operation,
             BuyOperationsIterator buyOperationsIterator,
             ChildOperationsProvider childOperationsProvider

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Invest.TaxCalculator.BusinessLogic.Operations;
 using Invest.TaxCalculator.BusinessLogic.Providers;
 
@@ -13,7 +14,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
             throw new System.NotImplementedException();
         }
 
-        public ITransaction Calculate(
+        public IEnumerable<ITransaction> Calculate(
             Operation operation,
             BuyOperationsIterator buyOperationsIterator,
             ChildOperationsProvider childOperationsProvider)

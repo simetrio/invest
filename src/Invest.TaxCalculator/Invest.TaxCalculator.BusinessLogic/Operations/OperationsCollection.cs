@@ -5,9 +5,9 @@ namespace Invest.TaxCalculator.BusinessLogic.Operations
     /// </summary>
     public class OperationsCollection
     {
-        public OperationsCollection(Operation[] all)
+        public OperationsCollection(Operation[] operations)
         {
-            All = all;
+            All = operations;
         }
 
         public Operation[] All { get; set; }

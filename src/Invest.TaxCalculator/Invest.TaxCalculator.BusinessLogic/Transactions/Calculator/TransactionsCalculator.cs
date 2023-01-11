@@ -28,7 +28,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
         {
             var buyOperationsIterator = new BuyOperationsIterator(operations, transactions);
             var childOperationsProvider = new ChildOperationsProvider(operations);
-            
+
             var operationsToCalculate = operations
                 .All
                 .Where(x => NeedCalculate(x, year));
@@ -36,8 +36,14 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
             foreach (var operation in operationsToCalculate)
             {
                 var calculator = GetCalculator(operation.Type);
-                
-                yield return calculator.Calculate(operation, buyOperationsIterator, childOperationsProvider);
+
+                var calculatedTransactions = calculator
+                    .Calculate(operation, buyOperationsIterator, childOperationsProvider);
+
+                foreach (var transaction in calculatedTransactions)
+                {
+                    yield return transaction;
+                }
             }
         }
 

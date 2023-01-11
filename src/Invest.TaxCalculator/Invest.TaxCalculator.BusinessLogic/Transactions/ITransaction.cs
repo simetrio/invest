@@ -5,5 +5,6 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions
     /// </summary>
     public interface ITransaction
     {
+        TransactionOperation[] Operations { get; set; }
     }
 }
