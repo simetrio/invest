@@ -7,41 +7,100 @@ namespace Invest.TaxCalculator.BusinessLogic
     /// </summary>
     public class TransactionsCalculator
     {
-        public TransactionBase[] Calculate(Operation[] operations, TransactionBase[] oldTransactions, int year)
+        public ITransaction[] Calculate(OperationsCollection operations, TransactionsCollection transactions, int year)
         {
             throw new NotImplementedException();
         }
     }
 
     /// <summary>
-    ///     Покупка/Продажа/Дивиденды/Комиссия брокера
+    ///     По методу FIFO отдает покупки
+    /// </summary>
+    public class BuyOperationsIterator
+    {
+        private readonly OperationsCollection _operations;
+        private readonly TransactionsCollection _transactions;
+
+        public BuyOperationsIterator(OperationsCollection operations, TransactionsCollection transactions)
+        {
+            _operations = operations;
+            _transactions = transactions;
+        }
+    }
+
+    /// <summary>
+    ///     Провайдер дочерних транзакций
+    /// </summary>
+    public class ChildOperationsProvider
+    {
+        private readonly OperationsCollection _operations;
+
+        public ChildOperationsProvider(OperationsCollection operations)
+        {
+            _operations = operations;
+        }
+    }
+
+    /// <summary>
+    ///     Коллекция операций
+    /// </summary>
+    public class OperationsCollection
+    {
+    }
+
+    /// <summary>
+    ///     Операция
     /// </summary>
     public class Operation
     {
-        
     }
 
     /// <summary>
-    ///     Базовый класс для сделок
+    ///     Коллекция транзакций
     /// </summary>
-    public abstract class TransactionBase
+    public class TransactionsCollection
     {
-        
     }
 
     /// <summary>
-    ///     Сделка по купле продаже
+    ///     Интерфейс для сделок
     /// </summary>
-    public class BuySellTransaction
+    public interface ITransaction
     {
-        
+    }
+
+    /// <summary>
+    ///     Сделка по купле продаже акции
+    /// </summary>
+    public class BuySellShareTransaction : ITransaction
+    {
     }
 
     /// <summary>
     ///     Дивиденды
     /// </summary>
-    public class DividendsTransaction
+    public class ShareDividendsTransaction : ITransaction
     {
-        
+    }
+
+    /// <summary>
+    ///     Сделка по купле продаже облигации
+    /// </summary>
+    public class BuySellBondTransaction : ITransaction
+    {
+    }
+
+    /// <summary>
+    ///     Гашение облигации
+    /// </summary>
+    public class BondCancellationTransaction : ITransaction
+    {
+    }
+
+    /// <summary>
+    ///     Купоны
+    /// </summary>
+    public class BondCouponsTransaction : ITransaction
+    {
     }
 }
