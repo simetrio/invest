@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Invest.TaxCalculator.BusinessLogic
 {
@@ -7,100 +9,62 @@ namespace Invest.TaxCalculator.BusinessLogic
     /// </summary>
     public class TransactionsCalculator
     {
-        public ITransaction[] Calculate(OperationsCollection operations, TransactionsCollection transactions, int year)
+        private readonly ITransactionCalculator[] _transactionCalculators =
         {
-            throw new NotImplementedException();
-        }
-    }
+            new BondCancellationTransactionCalculator(),
+            new BondCouponsTransactionCalculator(),
+            new BuySellBondTransactionCalculator(),
+            new BuySellShareTransactionCalculator(),
+            new ShareDividendsTransactionCalculator(),
+        };
 
-    /// <summary>
-    ///     По методу FIFO отдает покупки
-    /// </summary>
-    public class BuyOperationsIterator
-    {
-        private readonly OperationsCollection _operations;
-        private readonly TransactionsCollection _transactions;
-
-        public BuyOperationsIterator(OperationsCollection operations, TransactionsCollection transactions)
+        public IEnumerable<ITransaction> Calculate(
+            OperationsCollection operations,
+            TransactionsCollection transactions,
+            int year
+        )
         {
-            _operations = operations;
-            _transactions = transactions;
+            var buyOperationsIterator = new BuyOperationsIterator(operations, transactions);
+            var childOperationsProvider = new ChildOperationsProvider(operations);
+            
+            var operationsToCalculate = operations
+                .All
+                .Where(x => NeedCalculate(x, year));
+
+            foreach (var operation in operationsToCalculate)
+            {
+                var calculator = GetCalculator(operation.Type);
+                
+                yield return calculator.Calculate(operation, buyOperationsIterator, childOperationsProvider);
+            }
         }
-    }
 
-    /// <summary>
-    ///     Провайдер дочерних транзакций
-    /// </summary>
-    public class ChildOperationsProvider
-    {
-        private readonly OperationsCollection _operations;
-
-        public ChildOperationsProvider(OperationsCollection operations)
+        private ITransactionCalculator GetCalculator(OperationType operationType)
         {
-            _operations = operations;
+            return _transactionCalculators.Single(x => x.CanCalculate(operationType));
         }
-    }
 
-    /// <summary>
-    ///     Коллекция операций
-    /// </summary>
-    public class OperationsCollection
-    {
-    }
+        private bool NeedCalculate(Operation operation, int year)
+        {
+            if (operation.DateTime.Year != year)
+            {
+                return false;
+            }
 
-    /// <summary>
-    ///     Операция
-    /// </summary>
-    public class Operation
-    {
-    }
+            return operation.Type switch
+            {
+                OperationType.SellShare
+                    or OperationType.Dividends
+                    or OperationType.SellBond
+                    or OperationType.BondCancellation
+                    or OperationType.Coupons => true,
 
-    /// <summary>
-    ///     Коллекция транзакций
-    /// </summary>
-    public class TransactionsCollection
-    {
-    }
+                OperationType.BuyShare
+                    or OperationType.BuyBond
+                    or OperationType.Comission => false,
 
-    /// <summary>
-    ///     Интерфейс для сделок
-    /// </summary>
-    public interface ITransaction
-    {
-    }
-
-    /// <summary>
-    ///     Сделка по купле продаже акции
-    /// </summary>
-    public class BuySellShareTransaction : ITransaction
-    {
-    }
-
-    /// <summary>
-    ///     Дивиденды
-    /// </summary>
-    public class ShareDividendsTransaction : ITransaction
-    {
-    }
-
-    /// <summary>
-    ///     Сделка по купле продаже облигации
-    /// </summary>
-    public class BuySellBondTransaction : ITransaction
-    {
-    }
-
-    /// <summary>
-    ///     Гашение облигации
-    /// </summary>
-    public class BondCancellationTransaction : ITransaction
-    {
-    }
-
-    /// <summary>
-    ///     Купоны
-    /// </summary>
-    public class BondCouponsTransaction : ITransaction
-    {
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
     }
 }
