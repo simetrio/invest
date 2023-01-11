@@ -11,7 +11,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
     {
         bool CanCalculate(OperationType operationType);
 
-        IEnumerable<ITransaction> Calculate(
+        IEnumerable<Transaction> Calculate(
             Operation operation,
             BuyOperationsIterator buyOperationsIterator,
             ChildOperationsProvider childOperationsProvider

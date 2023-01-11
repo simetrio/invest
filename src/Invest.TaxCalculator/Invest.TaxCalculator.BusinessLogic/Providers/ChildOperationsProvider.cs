@@ -9,19 +9,19 @@ namespace Invest.TaxCalculator.BusinessLogic.Providers
     /// </summary>
     public class ChildOperationsProvider
     {
-        private readonly ILookup<string, Operation> _operationsByParentId;
+        private readonly Dictionary<string, Operation> _operationsByParentId;
 
         public ChildOperationsProvider(OperationsCollection operations)
         {
             _operationsByParentId = operations
                 .All
                 .Where(x => x.ParentId != null)
-                .ToLookup(x => x.ParentId!);
+                .ToDictionary(x => x.ParentId!);
         }
 
-        public IEnumerable<Operation> Get(string id)
+        public Operation? TryGet(string id)
         {
-            return _operationsByParentId[id];
+            return _operationsByParentId.TryGetValue(id, out var operation) ? operation : null;
         }
     }
 }

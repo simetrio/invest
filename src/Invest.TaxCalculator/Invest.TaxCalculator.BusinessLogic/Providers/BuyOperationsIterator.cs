@@ -18,7 +18,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Providers
             _operationsIterator = new BuyTickerOperationsIteratorFactory().Create(operations, transactions);
         }
 
-        public IEnumerable<TransactionOperation> Get(Operation operation)
+        public IEnumerable<BuyOperation> Get(Operation operation)
         {
             var iterator = _operationsIterator.Single(x => x.IsTicker(operation.Ticker));
 
@@ -35,7 +35,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Providers
                 var usedOperationCounts = transactions
                     .All
                     .SelectMany(x => x.Operations)
-                    .ToLookup(x => x.Id, x => x.Count);
+                    .ToLookup(x => x.Id, x => (int)x.Count);
 
                 return operations
                     .All
@@ -44,7 +44,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Providers
                     .Select(x =>
                     {
                         var count = x.Count - usedOperationCounts[x.Id].Sum();
-                        return new OperationRest(x, count);
+                        return new BuyOperation(x, count);
                     })
                     .GroupBy(x => x.Operation.Ticker)
                     .Select(x => new BuyTickerOperationsIterator(x.Key, x.ToArray()))
@@ -72,10 +72,10 @@ namespace Invest.TaxCalculator.BusinessLogic.Providers
 
         private class BuyTickerOperationsIterator
         {
-            private readonly OperationRest[] _operationRests;
+            private readonly BuyOperation[] _operationRests;
             private readonly string _ticker;
 
-            public BuyTickerOperationsIterator(string ticker, OperationRest[] operationRests)
+            public BuyTickerOperationsIterator(string ticker, BuyOperation[] operationRests)
             {
                 _ticker = ticker;
                 _operationRests = operationRests;
@@ -86,7 +86,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Providers
                 return _ticker == ticker;
             }
 
-            public IEnumerable<TransactionOperation> Get(Operation operation)
+            public IEnumerable<BuyOperation> Get(Operation operation)
             {
                 var count = operation.Count;
 
@@ -96,7 +96,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Providers
 
                     if (operationRest.Count <= count)
                     {
-                        var rest = new TransactionOperation(operationRest.Operation.Id, operationRest.Count);
+                        var rest = new BuyOperation(operationRest.Operation, operationRest.Count);
                         count -= operationRest.Count;
                         operationRest.Count = 0;
 
@@ -104,7 +104,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Providers
                     }
                     else
                     {
-                        var rest = new TransactionOperation(operationRest.Operation.Id, count);
+                        var rest = new BuyOperation(operationRest.Operation, count);
                         operationRest.Count -= count;
                         count = 0;
 
@@ -116,19 +116,6 @@ namespace Invest.TaxCalculator.BusinessLogic.Providers
 
                 throw new Exception($"Не нашли часть покупок бумаги {operation.Ticker} в кол-ве {count}");
             }
-        }
-
-        private class OperationRest
-        {
-            public OperationRest(Operation operation, int count)
-            {
-                Operation = operation;
-                Count = count;
-            }
-
-            public Operation Operation { get; }
-
-            public int Count { get; set; }
         }
     }
 }

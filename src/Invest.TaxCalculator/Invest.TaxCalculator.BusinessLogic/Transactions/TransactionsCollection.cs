@@ -5,11 +5,11 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions
     /// </summary>
     public class TransactionsCollection
     {
-        public TransactionsCollection(ITransaction[] transactions)
+        public TransactionsCollection(Transaction[] transactions)
         {
             All = transactions;
         }
 
-        public ITransaction[] All { get; }
+        public Transaction[] All { get; }
     }
 }

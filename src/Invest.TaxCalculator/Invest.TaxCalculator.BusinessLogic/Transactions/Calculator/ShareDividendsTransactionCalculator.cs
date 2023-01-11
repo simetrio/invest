@@ -11,13 +11,14 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
     {
         public bool CanCalculate(OperationType operationType)
         {
-            throw new System.NotImplementedException();
+            return operationType == OperationType.Dividends;
         }
 
-        public IEnumerable<ITransaction> Calculate(
+        public IEnumerable<Transaction> Calculate(
             Operation operation,
             BuyOperationsIterator buyOperationsIterator,
-            ChildOperationsProvider childOperationsProvider)
+            ChildOperationsProvider childOperationsProvider
+        )
         {
             throw new System.NotImplementedException();
         }

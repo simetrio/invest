@@ -20,7 +20,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
             new ShareDividendsTransactionCalculator(),
         };
 
-        public IEnumerable<ITransaction> Calculate(
+        public IEnumerable<Transaction> Calculate(
             OperationsCollection operations,
             TransactionsCollection transactions,
             int year

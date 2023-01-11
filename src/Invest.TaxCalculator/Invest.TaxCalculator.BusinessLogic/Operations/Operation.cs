@@ -36,5 +36,15 @@ namespace Invest.TaxCalculator.BusinessLogic.Operations
         ///     Кол-во
         /// </summary>
         public int Count { get; set; }
+
+        /// <summary>
+        ///     Цена
+        /// </summary>
+        public decimal Price { get; set; }
+
+        /// <summary>
+        ///     Курс доллара
+        /// </summary>
+        public decimal DollarPrice { get; set; }
     }
 }
