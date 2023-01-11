@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Invest.TaxCalculator.BusinessLogic.Operations;
 using Invest.TaxCalculator.BusinessLogic.Providers;
 
@@ -20,7 +21,35 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
             ChildOperationsProvider childOperationsProvider
         )
         {
-            throw new System.NotImplementedException();
+            var sellCommission = childOperationsProvider.TryGet(operation.Id);
+            var buys = buyOperationsIterator.Get(operation);
+
+            foreach (var buy in buys)
+            {
+                var buyCommission = childOperationsProvider.TryGet(buy.Operation.Id);
+
+                var buyTransactionOperation = TransactionOperation.Debit(buy.Operation, buy.Count);
+                var buyCommissionTransactionOperation = buyCommission != null
+                    ? TransactionOperation.Commission(buyCommission, buy.Count, buy.Operation.Count)
+                    : null;
+                
+                var sellTransactionOperation = TransactionOperation.Credit(operation, buy.Count);
+                var sellCommissionTransactionOperation = sellCommission != null
+                    ? TransactionOperation.Commission(sellCommission, buy.Count, operation.Count)
+                    : null;
+
+                var transactionOperations = new[]
+                    {
+                        buyTransactionOperation,
+                        buyCommissionTransactionOperation!,
+                        sellTransactionOperation,
+                        sellCommissionTransactionOperation!,
+                    }
+                    .Where(x => x != null)
+                    .ToArray();
+
+                yield return Transaction.Create(operation.Ticker, transactionOperations);
+            }
         }
     }
 }

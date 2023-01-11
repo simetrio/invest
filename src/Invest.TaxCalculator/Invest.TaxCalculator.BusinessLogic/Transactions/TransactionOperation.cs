@@ -9,6 +9,8 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions
     public class TransactionOperation
     {
         public string Id { get; set; }
+        
+        public TransactionOperationType Type { get; set; }
 
         public decimal Count { get; set; }
 
@@ -18,11 +20,15 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions
 
         public decimal DollarPrice { get; set; }
 
-        public static TransactionOperation Create(Operation operation, int count)
+        /// <summary>
+        ///     Расход
+        /// </summary>
+        public static TransactionOperation Debit(Operation operation, int count)
         {
             return new TransactionOperation
             {
                 Id = operation.Id,
+                Type = TransactionOperationType.Debit,
                 Count = count,
                 DateTime = operation.DateTime,
                 Price = operation.Price,
@@ -30,12 +36,32 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions
             };
         }
 
-        public static TransactionOperation CreateCommission(Operation operation, int count)
+        /// <summary>
+        ///     Приход
+        /// </summary>
+        public static TransactionOperation Credit(Operation operation, int count)
         {
             return new TransactionOperation
             {
                 Id = operation.Id,
-                Count = (decimal) count / operation.Count,
+                Type = TransactionOperationType.Credit,
+                Count = count,
+                DateTime = operation.DateTime,
+                Price = operation.Price,
+                DollarPrice = operation.DollarPrice,
+            };
+        }
+
+        /// <summary>
+        ///     Комиссия
+        /// </summary>
+        public static TransactionOperation Commission(Operation operation, int count, int totalCount)
+        {
+            return new TransactionOperation
+            {
+                Id = operation.Id,
+                Type = TransactionOperationType.Debit,
+                Count = (decimal) count / totalCount,
                 DateTime = operation.DateTime,
                 Price = operation.Price,
                 DollarPrice = operation.DollarPrice,

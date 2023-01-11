@@ -27,11 +27,11 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
             {
                 var buyCommission = childOperationsProvider.TryGet(buy.Operation.Id);
 
-                var buyTransactionOperation = TransactionOperation.Create(buy.Operation, buy.Count);
+                var buyTransactionOperation = TransactionOperation.Debit(buy.Operation, buy.Count);
                 var buyCommissionTransactionOperation = buyCommission != null
-                    ? TransactionOperation.CreateCommission(buyCommission, buy.Count)
+                    ? TransactionOperation.Commission(buyCommission, buy.Count, buy.Operation.Count)
                     : null;
-                var cancellationTransactionOperation = TransactionOperation.Create(operation, buy.Count);
+                var cancellationTransactionOperation = TransactionOperation.Credit(operation, buy.Count);
 
                 var transactionOperations = new[]
                     {

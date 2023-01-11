@@ -20,7 +20,9 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
             ChildOperationsProvider childOperationsProvider
         )
         {
-            throw new System.NotImplementedException();
+            var dividendsTransactionOperation = TransactionOperation.Credit(operation, operation.Count);
+
+            yield return Transaction.Create(operation.Ticker, new[] {dividendsTransactionOperation});
         }
     }
 }
