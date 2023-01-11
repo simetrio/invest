@@ -1,13 +1,12 @@
 using Invest.TaxCalculator.BusinessLogic.Operations;
 using Invest.TaxCalculator.BusinessLogic.Providers;
-using Invest.TaxCalculator.BusinessLogic.Transactions;
 
-namespace Invest.TaxCalculator.BusinessLogic.CalculateTransactions
+namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
 {
     /// <summary>
-    ///     Калькулятор транзакции купона
+    ///     Калькулятор транзакции сделки по купле продаже облигации
     /// </summary>
-    public class BondCouponsTransactionCalculator : ITransactionCalculator
+    public class BuySellBondTransactionCalculator : ITransactionCalculator
     {
         public bool CanCalculate(OperationType operationType)
         {
