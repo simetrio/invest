@@ -7,7 +7,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
     /// <summary>
     ///     Калькулятор транзакции купона
     /// </summary>
-    public class BondCouponsTransactionCalculator : ITransactionCalculator
+    public class CouponsTransactionCalculator : ITransactionCalculator
     {
         public bool CanCalculate(OperationType operationType)
         {
@@ -22,7 +22,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
         {
             var couponTransactionOperation = TransactionOperation.Credit(operation, operation.Count);
 
-            yield return Transaction.Create(operation.Ticker, new[] {couponTransactionOperation});
+            yield return Transaction.Create(operation.Ticker, TransactionType.Coupons, new[] {couponTransactionOperation});
         }
     }
 }

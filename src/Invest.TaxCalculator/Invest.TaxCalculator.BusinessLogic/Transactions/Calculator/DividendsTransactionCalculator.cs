@@ -7,7 +7,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
     /// <summary>
     ///     Калькулятор транзакции дивидендов
     /// </summary>
-    public class ShareDividendsTransactionCalculator : ITransactionCalculator
+    public class DividendsTransactionCalculator : ITransactionCalculator
     {
         public bool CanCalculate(OperationType operationType)
         {
@@ -22,7 +22,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
         {
             var dividendsTransactionOperation = TransactionOperation.Credit(operation, operation.Count);
 
-            yield return Transaction.Create(operation.Ticker, new[] {dividendsTransactionOperation});
+            yield return Transaction.Create(operation.Ticker, TransactionType.Dividends, new[] {dividendsTransactionOperation});
         }
     }
 }

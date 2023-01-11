@@ -14,10 +14,10 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
         private readonly ITransactionCalculator[] _transactionCalculators =
         {
             new BondCancellationTransactionCalculator(),
-            new BondCouponsTransactionCalculator(),
+            new CouponsTransactionCalculator(),
             new BuySellBondTransactionCalculator(),
             new BuySellShareTransactionCalculator(),
-            new ShareDividendsTransactionCalculator(),
+            new DividendsTransactionCalculator(),
         };
 
         public IEnumerable<Transaction> Calculate(
