@@ -14,7 +14,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Operations
         public string Id { get; set; }
 
         /// <summary>
-        ///     Ид родительской итерации
+        ///     Ид родительской операции
         /// </summary>
         public string? ParentId { get; set; }
 

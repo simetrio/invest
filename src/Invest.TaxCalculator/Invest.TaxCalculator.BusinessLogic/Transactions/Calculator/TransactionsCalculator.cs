@@ -30,7 +30,8 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
 
             var operationsToCalculate = operations
                 .All
-                .Where(x => NeedCalculate(x, year));
+                .Where(x => NeedCalculate(x, year))
+                .OrderBy(x => x.DateTime);
 
             foreach (var operation in operationsToCalculate)
             {

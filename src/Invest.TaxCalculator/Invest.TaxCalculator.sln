@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invest.TaxCalculator.BusinessLogic", "Invest.TaxCalculator.BusinessLogic\Invest.TaxCalculator.BusinessLogic.csproj", "{CE8B5159-073E-4580-B057-87D7B5E6BD9A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invest.TaxCalculator.Tests", "Invest.TaxCalculator.Tests\Invest.TaxCalculator.Tests.csproj", "{CBB286E4-5F81-46A0-9C19-42358D0371F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{CE8B5159-073E-4580-B057-87D7B5E6BD9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE8B5159-073E-4580-B057-87D7B5E6BD9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE8B5159-073E-4580-B057-87D7B5E6BD9A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBB286E4-5F81-46A0-9C19-42358D0371F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBB286E4-5F81-46A0-9C19-42358D0371F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBB286E4-5F81-46A0-9C19-42358D0371F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBB286E4-5F81-46A0-9C19-42358D0371F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
