@@ -8,11 +8,12 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
     /// <summary>
     ///     Калькулятор транзакции сделки по купле продаже облигации
     /// </summary>
-    public class BuySellBondTransactionCalculator : ITransactionCalculator
+    public class BuySellShareOrBondTransactionCalculator : ITransactionCalculator
     {
         public bool CanCalculate(OperationType operationType)
         {
-            return operationType == OperationType.SellBond;
+            return operationType == OperationType.SellShare 
+                || operationType == OperationType.SellBond;
         }
 
         public IEnumerable<Transaction> Calculate(
@@ -48,7 +49,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
                     .Where(x => x != null)
                     .ToArray();
 
-                yield return Transaction.Create(operation.Ticker, TransactionType.SellBond, transactionOperations);
+                yield return Transaction.Create(operation.Ticker, TransactionType.SellShareOrBond, transactionOperations);
             }
         }
     }
