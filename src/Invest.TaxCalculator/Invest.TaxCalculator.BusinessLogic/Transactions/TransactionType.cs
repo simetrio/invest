@@ -3,7 +3,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions
     public enum TransactionType
     {
         /// <summary>
-        ///     Продажа облигации
+        ///     Продажа акции или облигации
         /// </summary>
         SellShareOrBond,
 
