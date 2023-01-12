@@ -1,4 +1,5 @@
 using System;
+using Invest.TaxCalculator.BusinessLogic.Countries;
 
 namespace Invest.TaxCalculator.BusinessLogic.Operations
 {
@@ -46,5 +47,10 @@ namespace Invest.TaxCalculator.BusinessLogic.Operations
         ///     Курс доллара
         /// </summary>
         public decimal DollarPrice { get; set; }
+
+        /// <summary>
+        ///     Страна
+        /// </summary>
+        public Country Country { get; set; }
     }
 }

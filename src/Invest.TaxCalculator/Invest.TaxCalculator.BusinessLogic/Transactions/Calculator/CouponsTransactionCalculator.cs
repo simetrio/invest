@@ -22,7 +22,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
         {
             var couponTransactionOperation = TransactionOperation.Credit(operation, operation.Count);
 
-            yield return Transaction.Create(operation.Ticker, TransactionType.Coupons, new[] {couponTransactionOperation});
+            yield return Transaction.Create(operation, TransactionType.Coupons, new[] {couponTransactionOperation});
         }
     }
 }

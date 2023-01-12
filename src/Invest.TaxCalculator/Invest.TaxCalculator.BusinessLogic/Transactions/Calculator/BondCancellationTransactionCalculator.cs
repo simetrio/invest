@@ -42,7 +42,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
                     .Where(x => x != null)
                     .ToArray();
 
-                yield return Transaction.Create(operation.Ticker, TransactionType.BondCancellation, transactionOperations);
+                yield return Transaction.Create(operation, TransactionType.BondCancellation, transactionOperations);
             }
         }
     }

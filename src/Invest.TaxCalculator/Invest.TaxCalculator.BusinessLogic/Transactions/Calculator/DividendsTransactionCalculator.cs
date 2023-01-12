@@ -22,7 +22,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
         {
             var dividendsTransactionOperation = TransactionOperation.Credit(operation, operation.Count);
 
-            yield return Transaction.Create(operation.Ticker, TransactionType.Dividends, new[] {dividendsTransactionOperation});
+            yield return Transaction.Create(operation, TransactionType.Dividends, new[] {dividendsTransactionOperation});
         }
     }
 }
