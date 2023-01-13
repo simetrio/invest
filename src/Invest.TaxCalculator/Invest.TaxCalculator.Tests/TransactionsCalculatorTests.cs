@@ -4,6 +4,7 @@ using FluentAssertions;
 using Invest.TaxCalculator.BusinessLogic.Operations;
 using Invest.TaxCalculator.BusinessLogic.Transactions;
 using Invest.TaxCalculator.BusinessLogic.Transactions.Calculator;
+using Invest.TaxCalculator.Tests.Utils;
 using NUnit.Framework;
 
 namespace Invest.TaxCalculator.Tests
@@ -14,15 +15,12 @@ namespace Invest.TaxCalculator.Tests
 
         [TestCaseSource(nameof(TestCalculateData))]
         public void CalculateTransactions(
-            Operation[] operationsArray,
-            Transaction[] transactionsArray,
+            Operation[] operations,
+            Transaction[] transactions,
             int year,
             IEnumerable<Transaction> expected
         )
         {
-            var operations = new OperationsCollection(operationsArray);
-            var transactions = new TransactionsCollection(transactionsArray);
-
             var actual = _transactionsCalculator.Calculate(operations, transactions, year);
 
             actual.Should().BeEquivalentTo(expected);

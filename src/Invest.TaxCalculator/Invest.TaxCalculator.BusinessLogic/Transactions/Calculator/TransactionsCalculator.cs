@@ -20,8 +20,8 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
         };
 
         public IEnumerable<Transaction> Calculate(
-            OperationsCollection operations,
-            TransactionsCollection transactions,
+            Operation[] operations,
+            Transaction[] transactions,
             int year
         )
         {
@@ -29,7 +29,6 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
             var childOperationsProvider = new ChildOperationsProvider(operations);
 
             var operationsToCalculate = operations
-                .All
                 .Where(x => NeedCalculate(x, year))
                 .OrderBy(x => x.DateTime);
 

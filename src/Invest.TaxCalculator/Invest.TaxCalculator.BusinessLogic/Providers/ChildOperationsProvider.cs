@@ -11,10 +11,9 @@ namespace Invest.TaxCalculator.BusinessLogic.Providers
     {
         private readonly Dictionary<string, Operation> _operationsByParentId;
 
-        public ChildOperationsProvider(OperationsCollection operations)
+        public ChildOperationsProvider(Operation[] operations)
         {
             _operationsByParentId = operations
-                .All
                 .Where(x => x.ParentId != null)
                 .ToDictionary(x => x.ParentId!);
         }

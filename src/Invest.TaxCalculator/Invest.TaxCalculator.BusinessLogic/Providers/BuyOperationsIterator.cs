@@ -13,7 +13,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Providers
     {
         private readonly BuyTickerOperationsIterator[] _operationsIterator;
 
-        public BuyOperationsIterator(OperationsCollection operations, TransactionsCollection transactions)
+        public BuyOperationsIterator(Operation[] operations, Transaction[] transactions)
         {
             _operationsIterator = new BuyTickerOperationsIteratorFactory().Create(operations, transactions);
         }
@@ -28,17 +28,15 @@ namespace Invest.TaxCalculator.BusinessLogic.Providers
         private class BuyTickerOperationsIteratorFactory
         {
             public BuyTickerOperationsIterator[] Create(
-                OperationsCollection operations,
-                TransactionsCollection transactions
+                Operation[] operations,
+                Transaction[] transactions
             )
             {
                 var usedOperationCounts = transactions
-                    .All
                     .SelectMany(x => x.Operations)
                     .ToLookup(x => x.Id, x => (int)x.Count);
 
                 return operations
-                    .All
                     .Where(NeedOperation)
                     .OrderBy(x => x.DateTime)
                     .Select(x =>
