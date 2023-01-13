@@ -28,6 +28,8 @@ namespace Invest.TaxCalculator.Tests
         {
             yield return BuySellPlus();
             yield return BuySellMinus();
+            yield return Dividends();
+            yield return Coupons();
         }
 
         private static TestCaseData BuySellPlus()
@@ -107,6 +109,62 @@ namespace Invest.TaxCalculator.Tests
             };
 
             return Create(builder, 2018, expected).SetName("BuySellMinus");
+        }
+
+        private static TestCaseData Dividends()
+        {
+            var builder = new EntityBuilder()
+                .WithDividendsTransaction(
+                    9,
+                    9.75m,
+                    72.18m
+                );
+
+            var expected = new Report
+            {
+                Year = 2018,
+                Items = new[]
+                {
+                    new ReportItem
+                    {
+                        Country = Country.Us,
+                        Type = TransactionType.Dividends,
+                        Profit = 6333.795m,
+                        TaxPercent = 3m,
+                        Tax = 190m,
+                    }
+                }
+            };
+
+            return Create(builder, 2018, expected).SetName("Dividends");
+        }
+
+        private static TestCaseData Coupons()
+        {
+            var builder = new EntityBuilder()
+                .WithCouponsTransaction(
+                    7,
+                    7.85m,
+                    71.14m
+                );
+
+            var expected = new Report
+            {
+                Year = 2018,
+                Items = new[]
+                {
+                    new ReportItem
+                    {
+                        Country = Country.Us,
+                        Type = TransactionType.Coupons,
+                        Profit = 3909.143m,
+                        TaxPercent = 13m,
+                        Tax = 508m,
+                    }
+                }
+            };
+
+            return Create(builder, 2018, expected).SetName("Coupons");
         }
 
         private static TestCaseData Create(

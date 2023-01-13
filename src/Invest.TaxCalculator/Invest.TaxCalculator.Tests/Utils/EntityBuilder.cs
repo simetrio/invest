@@ -342,6 +342,56 @@ namespace Invest.TaxCalculator.Tests.Utils
             return this;
         }
 
+        public EntityBuilder WithDividendsTransaction(
+            int count,
+            decimal price,
+            decimal dollarPrice
+        )
+        {
+            var buy = _fixture
+                .BuildOperation(OperationType.Dividends)
+                .With(x => x.Count, count)
+                .With(x => x.Price, price)
+                .With(x => x.DollarPrice, dollarPrice)
+                .Create();
+
+            var operations = new[]
+            {
+                TransactionOperation.Credit(buy, count),
+            };
+            
+            var transaction = Transaction.Create(buy, TransactionType.Dividends, operations);
+
+            _transactions.Add(transaction);
+
+            return this;
+        }
+
+        public EntityBuilder WithCouponsTransaction(
+            int count,
+            decimal price,
+            decimal dollarPrice
+        )
+        {
+            var buy = _fixture
+                .BuildOperation(OperationType.Coupons)
+                .With(x => x.Count, count)
+                .With(x => x.Price, price)
+                .With(x => x.DollarPrice, dollarPrice)
+                .Create();
+
+            var operations = new[]
+            {
+                TransactionOperation.Credit(buy, count),
+            };
+            
+            var transaction = Transaction.Create(buy, TransactionType.Coupons, operations);
+
+            _transactions.Add(transaction);
+
+            return this;
+        }
+
         public Operation[] Operations => _operations.ToArray();
 
         public Transaction[] Transactions => _transactions.ToArray();
