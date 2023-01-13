@@ -11,7 +11,6 @@ namespace Invest.TaxCalculator.Tests
             return fixture
                 .Build<Operation>()
                 .With(x => x.Type, operationType)
-                .With(x => x.DollarPrice, 69.71m)
                 .With(x => x.ParentId, (string?)null);
         }
         
@@ -22,7 +21,8 @@ namespace Invest.TaxCalculator.Tests
                 .With(x => x.Ticker, operation.Ticker)
                 .With(x => x.ParentId, operation.Id)
                 .With(x => x.DateTime, operation.DateTime)
-                .With(x => x.Count, 1);
+                .With(x => x.Count, 1)
+                .With(x => x.DollarPrice, operation.DollarPrice);
         }
         
         public static IPostprocessComposer<Operation> BuildSell(this IFixture fixture, Operation operation)

@@ -34,84 +34,41 @@ namespace Invest.TaxCalculator.Tests
         {
             yield return BuySellShared();
         }
-        
+
         private static TestCaseData BuySellShared()
         {
-            var oldBuyShare = Fixture
-                .BuildOperation(OperationType.BuyShare)
-                .With(x => x.DateTime, new DateTime(2017, 12, 11))
-                .With(x => x.DollarPrice, 69.71m)
-                .With(x => x.Price, 275.45m)
-                .With(x => x.Count, 10)
-                .Create();
-            
-            var oldBuyShareCommission = Fixture
-                .BuildCommission(oldBuyShare)
-                .With(x => x.DollarPrice, 69.71m)
-                .Create();
-            
-            var oldSellShare = Fixture
-                .BuildSell(oldBuyShare)
-                .With(x => x.DateTime, new DateTime(2018, 10, 11))
-                .With(x => x.DollarPrice, 75.15m)
-                .With(x => x.Price, 247.48m)
-                .With(x => x.Count, 7)
-                .Create();
-            
-            var oldSellShareCommission = Fixture
-                .BuildCommission(oldSellShare)
-                .With(x => x.DollarPrice, 75.15m)
-                .Create();
-            
-            var buyShare = Fixture
-                .BuildOperation(OperationType.BuyShare)
-                .With(x => x.DateTime, new DateTime(2018, 11, 9))
-                .With(x => x.DollarPrice, 74.11m)
-                .With(x => x.Price, 253.16m)
-                .With(x => x.Count, 12)
-                .Create();
-            
-            var buyShareCommission = Fixture
-                .BuildCommission(buyShare)
-                .With(x => x.DollarPrice, 74.11m)
-                .Create();
-            
-            var sellShare = Fixture
-                .BuildSell(oldBuyShare)
-                .With(x => x.DateTime, new DateTime(2019, 6, 12))
-                .With(x => x.DollarPrice, 73.42m)
-                .With(x => x.Price, 289.17m)
-                .With(x => x.Count, 9)
-                .Create();
-            
-            var sellShareCommission = Fixture
-                .BuildCommission(sellShare)
-                .With(x => x.DollarPrice, 73.42m)
-                .Create();
-            
-            var operations = new[]
-            {
-                oldBuyShare,
-                oldBuyShareCommission,
-                oldSellShare,
-                oldSellShareCommission,
-                buyShare,
-                buyShareCommission,
-                sellShare,
-                sellShareCommission,
-            };
+            var builder = new EntityBuilder()
+                .WithBuySellShare(
+                    "BCD",
+                    new DateTime(2017, 12, 11),
+                    10,
+                    275.45m,
+                    69.71m,
+                    new DateTime(2018, 10, 11),
+                    7,
+                    247.48m,
+                    75.15m,
+                    0.01m
+                )
+                .AndBuySellShareTransaction()
+                .WithBuySellShare(
+                    "BCD",
+                    new DateTime(2018, 11, 9),
+                    12,
+                    253.16m,
+                    74.11m,
+                    new DateTime(2019, 6, 12),
+                    9,
+                    289.17m,
+                    73.42m,
+                    0.01m
+                );
 
-            var transactions = new Transaction[]
-            {
-                
-            };
-            
             var expected = new Transaction[]
             {
-                
             };
 
-            return Create(operations, transactions, 2019, expected)
+            return Create(builder.Operations, builder.Transactions, 2019, expected)
                 .SetName("BuySellShared");
         }
 
