@@ -27,6 +27,7 @@ namespace Invest.TaxCalculator.Tests
         private static IEnumerable<TestCaseData> TestCalculateData()
         {
             yield return BuySellPlus();
+            yield return BuySellMinus();
         }
 
         private static TestCaseData BuySellPlus()
@@ -71,7 +72,41 @@ namespace Invest.TaxCalculator.Tests
                 }
             };
 
-            return Create(builder, 2018, expected);
+            return Create(builder, 2018, expected).SetName("BuySellPlus");
+        }
+
+        private static TestCaseData BuySellMinus()
+        {
+            var builder = new EntityBuilder()
+                .WithBuySellTransaction(
+                    9,
+                    17,
+                    249.15m,
+                    91.15m,
+                    257.98m,
+                    74.84m,
+                    0.01m
+                );
+
+            var expected = new Report
+            {
+                Year = 2018,
+                Items = new[]
+                {
+                    new ReportItem
+                    {
+                        Country = Country.Us,
+                        Type = TransactionType.SellShareOrBond,
+                        // 9 * 257.98m * 74.84m - 9 * 249.15m * 91.15m - 9 * 249.15m * 91.15m * 0.01m - 9 * 257.98m * 74.84m * 0.01m
+                        // 173765,0088 - 204390,2025 - 2043,902025 - 1737,650088 = -34406,745813
+                        Profit = -34406.745813m,
+                        TaxPercent = 13m,
+                        Tax = 0m,
+                    }
+                }
+            };
+
+            return Create(builder, 2018, expected).SetName("BuySellMinus");
         }
 
         private static TestCaseData Create(

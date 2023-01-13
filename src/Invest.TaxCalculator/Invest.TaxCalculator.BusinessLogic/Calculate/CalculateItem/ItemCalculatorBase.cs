@@ -28,7 +28,9 @@ namespace Invest.TaxCalculator.BusinessLogic.Calculate.CalculateItem
 
         private decimal CalculateTax(decimal profit, decimal taxPercent)
         {
-            return Math.Round(profit * taxPercent / 100, 0);
+            return profit > 0
+                ? Math.Round(profit * taxPercent / 100, 0)
+                : 0;
         }
 
         private decimal CalculateProfit(Transaction[] transactions)
