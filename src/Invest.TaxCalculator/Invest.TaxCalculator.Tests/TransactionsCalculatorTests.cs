@@ -33,6 +33,7 @@ namespace Invest.TaxCalculator.Tests
             yield return BuySellShare();
             yield return Dividends();
             yield return BuySellBond();
+            yield return CancellationBond();
             yield return Coupons();
         }
 
@@ -295,6 +296,112 @@ namespace Invest.TaxCalculator.Tests
             };
 
             return Create(builder, 2019, expected).SetName("BuySellBond");
+        }
+
+        private static TestCaseData CancellationBond()
+        {
+            var builder = new EntityBuilder()
+                .WithBuySellBond(
+                    "R48948",
+                    new DateTime(2017, 12, 11),
+                    8,
+                    285.45m,
+                    69.71m,
+                    new DateTime(2018, 10, 11),
+                    6,
+                    289.25m,
+                    75.15m,
+                    0.01m
+                )
+                .AndBuySellTransaction()
+                .WithBuyCancellationBond(
+                    "R48948",
+                    new DateTime(2018, 11, 9),
+                    12,
+                    291.86m,
+                    74.11m,
+                    new DateTime(2019, 6, 12),
+                    14,
+                    300m,
+                    73.42m,
+                    0.01m
+                );
+
+            var buy1 = builder.Operations[0];
+            var buy1Commission = builder.Operations[1];
+            var buy2 = builder.Operations[^3];
+            var buy2Commission = builder.Operations[^2];
+            var cancellation = builder.Operations[^1];
+
+            var operations1 = new[]
+            {
+                new TransactionOperation
+                {
+                    Id = buy1.Id,
+                    Type = TransactionOperationType.Debit,
+                    Count = 2,
+                    DateTime = new DateTime(2017, 12, 11),
+                    Price = 285.45m,
+                    DollarPrice = 69.71m,
+                },
+                new TransactionOperation
+                {
+                    Id = buy1Commission.Id,
+                    Type = TransactionOperationType.Debit,
+                    Count = (decimal) 2 / 8,
+                    DateTime = new DateTime(2017, 12, 11),
+                    Price = 22.836m,
+                    DollarPrice = 69.71m,
+                },
+                new TransactionOperation
+                {
+                    Id = cancellation.Id,
+                    Type = TransactionOperationType.Credit,
+                    Count = 2,
+                    DateTime = new DateTime(2019, 6, 12),
+                    Price = 300m,
+                    DollarPrice = 73.42m,
+                },
+            };
+
+            var operations2 = new[]
+            {
+                new TransactionOperation
+                {
+                    Id = buy2.Id,
+                    Type = TransactionOperationType.Debit,
+                    Count = 12,
+                    DateTime = new DateTime(2018, 11, 9),
+                    Price = 291.86m,
+                    DollarPrice = 74.11m,
+                },
+                new TransactionOperation
+                {
+                    Id = buy2Commission.Id,
+                    Type = TransactionOperationType.Debit,
+                    Count = 1,
+                    DateTime = new DateTime(2018, 11, 9),
+                    Price = 35.0232m,
+                    DollarPrice = 74.11m,
+                },
+                new TransactionOperation
+                {
+                    Id = cancellation.Id,
+                    Type = TransactionOperationType.Credit,
+                    Count = 12,
+                    DateTime = new DateTime(2019, 6, 12),
+                    Price = 300m,
+                    DollarPrice = 73.42m,
+                },
+            };
+
+            var expected = new[]
+            {
+                Transaction.Create(cancellation, TransactionType.BondCancellation, operations1),
+                Transaction.Create(cancellation, TransactionType.BondCancellation, operations2),
+            };
+
+            return Create(builder, 2019, expected).SetName("BondCancellation");
         }
 
         private static TestCaseData Coupons()

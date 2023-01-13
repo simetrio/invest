@@ -160,6 +160,49 @@ namespace Invest.TaxCalculator.Tests
 
             return this;
         }
+        
+        public EntityBuilder WithBuyCancellationBond(
+            string ticker,
+            DateTime buyDateTime,
+            int buyCount,
+            decimal buyPrice,
+            decimal buyDollarPrice,
+            DateTime sellDateTime,
+            int sellCount,
+            decimal sellPrice,
+            decimal sellDollarPrice,
+            decimal commissionPercent
+        )
+        {
+            var buy = _fixture
+                .BuildOperation(OperationType.BuyBond)
+                .With(x => x.Ticker, ticker)
+                .With(x => x.DateTime, buyDateTime)
+                .With(x => x.Count, buyCount)
+                .With(x => x.Price, buyPrice)
+                .With(x => x.DollarPrice, buyDollarPrice)
+                .Create();
+
+            var buyCommission = _fixture
+                .BuildCommission(buy)
+                .With(x => x.Price, buyPrice * buyCount * commissionPercent)
+                .Create();
+
+            var sell = _fixture
+                .BuildOperation(OperationType.BondCancellation)
+                .With(x => x.Ticker, ticker)
+                .With(x => x.DateTime, sellDateTime)
+                .With(x => x.Count, sellCount)
+                .With(x => x.Price, sellPrice)
+                .With(x => x.DollarPrice, sellDollarPrice)
+                .Create();
+            
+            _operations.Add(buy);
+            _operations.Add(buyCommission);
+            _operations.Add(sell);
+
+            return this;
+        }
 
         public EntityBuilder WithBuyBond(
             string ticker,
