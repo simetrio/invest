@@ -32,6 +32,7 @@ namespace Invest.TaxCalculator.Tests
         {
             yield return BuySellShare();
             yield return BuySellBond();
+            yield return Dividends();
         }
 
         private static TestCaseData BuySellShare()
@@ -156,8 +157,54 @@ namespace Invest.TaxCalculator.Tests
                 Transaction.Create(sell, TransactionType.SellShareOrBond, operations2),
             };
 
-            return Create(builder.Operations, builder.Transactions, 2019, expected)
-                .SetName("BuySellShare");
+            return Create(builder, 2019, expected).SetName("BuySellShare");
+        }
+
+        private static TestCaseData Dividends()
+        {
+            var builder = new EntityBuilder()
+                .WithBuyShare(
+                    "ERV",
+                    new DateTime(2017, 12, 11),
+                    10,
+                    275.45m,
+                    69.71m,
+                    0.01m
+                )
+                .WithDividends(
+                    "ERV",
+                    new DateTime(2018, 11, 9),
+                    10,
+                    15.74m,
+                    74.11m
+                )
+                .WithDividends(
+                    "ERV",
+                    new DateTime(2019, 3, 15),
+                    10,
+                    17.74m,
+                    73.21m
+                );
+
+            var operations = new[]
+            {
+                new TransactionOperation
+                {
+                    Id = builder.Operations[^1].Id,
+                    Type = TransactionOperationType.Credit,
+                    Count = 10,
+                    DateTime = new DateTime(2019, 3, 15),
+                    Price = 17.74m,
+                    DollarPrice = 73.21m,
+                },
+            };
+
+            var expected = new[]
+            {
+                Transaction.Create(builder.Operations[0], TransactionType.Dividends, operations),
+            };
+
+            return Create(builder, 2019, expected).SetName("Dividends");
         }
 
         private static TestCaseData BuySellBond()
@@ -239,18 +286,16 @@ namespace Invest.TaxCalculator.Tests
                 Transaction.Create(sell, TransactionType.SellShareOrBond, operations),
             };
 
-            return Create(builder.Operations, builder.Transactions, 2019, expected)
-                .SetName("BuySellBond");
+            return Create(builder, 2019, expected).SetName("BuySellBond");
         }
 
         private static TestCaseData Create(
-            Operation[] operationsArray,
-            Transaction[] transactionsArray,
+            EntityBuilder entityBuilder,
             int year,
             IEnumerable<Transaction> expected
         )
         {
-            return new TestCaseData(operationsArray, transactionsArray, year, expected);
+            return new TestCaseData(entityBuilder.Operations, entityBuilder.Transactions, year, expected);
         }
     }
 }
