@@ -30,10 +30,11 @@ namespace Invest.TaxCalculator.Tests
 
         private static IEnumerable<TestCaseData> TestCalculateData()
         {
-            yield return BuySellShared();
+            yield return BuySellShare();
+            yield return BuySellBond();
         }
 
-        private static TestCaseData BuySellShared()
+        private static TestCaseData BuySellShare()
         {
             var builder = new EntityBuilder()
                 .WithBuySellShare(
@@ -48,7 +49,7 @@ namespace Invest.TaxCalculator.Tests
                     75.15m,
                     0.01m
                 )
-                .AndBuySellShareTransaction()
+                .AndBuySellTransaction()
                 .WithBuySellShare(
                     "BCD",
                     new DateTime(2018, 11, 9),
@@ -156,7 +157,90 @@ namespace Invest.TaxCalculator.Tests
             };
 
             return Create(builder.Operations, builder.Transactions, 2019, expected)
-                .SetName("BuySellShared");
+                .SetName("BuySellShare");
+        }
+
+        private static TestCaseData BuySellBond()
+        {
+            var builder = new EntityBuilder()
+                .WithBuySellBond(
+                    "R48948",
+                    new DateTime(2017, 12, 11),
+                    10,
+                    275.45m,
+                    69.71m,
+                    new DateTime(2018, 10, 11),
+                    10,
+                    247.48m,
+                    75.15m,
+                    0.01m
+                )
+                .AndBuySellTransaction()
+                .WithBuySellBond(
+                    "R48948",
+                    new DateTime(2018, 11, 9),
+                    12,
+                    253.16m,
+                    74.11m,
+                    new DateTime(2019, 6, 12),
+                    9,
+                    289.17m,
+                    73.42m,
+                    0.01m
+                );
+
+            var buy = builder.Operations[^4];
+            var buyCommission = builder.Operations[^3];
+            var sell = builder.Operations[^2];
+            var sellCommission = builder.Operations[^1];
+
+            var operations = new[]
+            {
+                new TransactionOperation
+                {
+                    Id = buy.Id,
+                    Type = TransactionOperationType.Debit,
+                    Count = 9,
+                    DateTime = buy.DateTime,
+                    Price = buy.Price,
+                    DollarPrice = buy.DollarPrice,
+                },
+                new TransactionOperation
+                {
+                    Id = buyCommission.Id,
+                    Type = TransactionOperationType.Debit,
+                    Count = (decimal) 9 / 12,
+                    DateTime = buyCommission.DateTime,
+                    Price = buyCommission.Price,
+                    DollarPrice = buyCommission.DollarPrice,
+                },
+                new TransactionOperation
+                {
+                    Id = sell.Id,
+                    Type = TransactionOperationType.Credit,
+                    Count = 9,
+                    DateTime = sell.DateTime,
+                    Price = sell.Price,
+                    DollarPrice = sell.DollarPrice,
+                },
+                new TransactionOperation
+                {
+                    Id = sellCommission.Id,
+                    Type = TransactionOperationType.Debit,
+                    Count = 1,
+                    DateTime = sellCommission.DateTime,
+                    Price = sellCommission.Price,
+                    DollarPrice = sellCommission.DollarPrice,
+                },
+            };
+
+            var expected = new[]
+            {
+                Transaction.Create(sell, TransactionType.SellShareOrBond, operations),
+            };
+
+            return Create(builder.Operations, builder.Transactions, 2019, expected)
+                .SetName("BuySellBond");
         }
 
         private static TestCaseData Create(

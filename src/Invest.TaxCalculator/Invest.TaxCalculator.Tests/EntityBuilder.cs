@@ -60,8 +60,57 @@ namespace Invest.TaxCalculator.Tests
 
             return this;
         }
+        
+        public EntityBuilder WithBuySellBond(
+            string ticker,
+            DateTime buyDateTime,
+            int buyCount,
+            decimal buyPrice,
+            decimal buyDollarPrice,
+            DateTime sellDateTime,
+            int sellCount,
+            decimal sellPrice,
+            decimal sellDollarPrice,
+            decimal commissionPercent
+        )
+        {
+            var buy = _fixture
+                .BuildOperation(OperationType.BuyBond)
+                .With(x => x.Ticker, ticker)
+                .With(x => x.DateTime, buyDateTime)
+                .With(x => x.Count, buyCount)
+                .With(x => x.Price, buyPrice)
+                .With(x => x.DollarPrice, buyDollarPrice)
+                .Create();
 
-        public EntityBuilder AndBuySellShareTransaction()
+            var buyCommission = _fixture
+                .BuildCommission(buy)
+                .With(x => x.Price, buyPrice * buyCount * commissionPercent)
+                .Create();
+
+            var sell = _fixture
+                .BuildOperation(OperationType.SellBond)
+                .With(x => x.Ticker, ticker)
+                .With(x => x.DateTime, sellDateTime)
+                .With(x => x.Count, sellCount)
+                .With(x => x.Price, sellPrice)
+                .With(x => x.DollarPrice, sellDollarPrice)
+                .Create();
+
+            var sellCommission = _fixture
+                .BuildCommission(sell)
+                .With(x => x.Price, sellPrice * sellCount * commissionPercent)
+                .Create();
+            
+            _operations.Add(buy);
+            _operations.Add(buyCommission);
+            _operations.Add(sell);
+            _operations.Add(sellCommission);
+
+            return this;
+        }
+
+        public EntityBuilder AndBuySellTransaction()
         {
             var buy = _operations[^4];
             var buyCommission = _operations[^3];
