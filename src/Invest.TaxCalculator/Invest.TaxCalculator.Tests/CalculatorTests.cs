@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Invest.TaxCalculator.BusinessLogic.Calculate;
 using Invest.TaxCalculator.BusinessLogic.Countries;
+using Invest.TaxCalculator.BusinessLogic.Reports;
 using Invest.TaxCalculator.BusinessLogic.Transactions;
 using Invest.TaxCalculator.Tests.Utils;
 using NUnit.Framework;

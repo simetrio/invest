@@ -1,7 +1,7 @@
 using Invest.TaxCalculator.BusinessLogic.Countries;
 using Invest.TaxCalculator.BusinessLogic.Transactions;
 
-namespace Invest.TaxCalculator.BusinessLogic.Calculate
+namespace Invest.TaxCalculator.BusinessLogic.Reports
 {
     public class ReportItem
     {

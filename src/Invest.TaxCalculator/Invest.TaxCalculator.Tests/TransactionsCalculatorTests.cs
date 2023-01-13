@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using Invest.TaxCalculator.BusinessLogic.Operations;
 using Invest.TaxCalculator.BusinessLogic.Transactions;
@@ -18,7 +19,7 @@ namespace Invest.TaxCalculator.Tests
             Operation[] operations,
             Transaction[] transactions,
             int year,
-            IEnumerable<Transaction> expected
+            Transactions expected
         )
         {
             var actual = _transactionsCalculator.Calculate(operations, transactions, year);
@@ -110,7 +111,7 @@ namespace Invest.TaxCalculator.Tests
                     DollarPrice = 73.42m,
                 },
             };
-            
+
             var operations2 = new[]
             {
                 new TransactionOperation
@@ -459,9 +460,15 @@ namespace Invest.TaxCalculator.Tests
         private static TestCaseData Create(
             EntityBuilder entityBuilder,
             int year,
-            IEnumerable<Transaction> expected
+            IEnumerable<Transaction> expectedTransactions
         )
         {
+            var expected = new Transactions
+            {
+                Year = year,
+                Items = expectedTransactions.ToArray(),
+            };
+
             return new TestCaseData(entityBuilder.Operations, entityBuilder.Transactions, year, expected);
         }
     }

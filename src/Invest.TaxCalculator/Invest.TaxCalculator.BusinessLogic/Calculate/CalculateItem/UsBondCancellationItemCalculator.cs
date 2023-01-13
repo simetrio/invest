@@ -1,4 +1,5 @@
 ﻿using Invest.TaxCalculator.BusinessLogic.Countries;
+using Invest.TaxCalculator.BusinessLogic.Reports;
 using Invest.TaxCalculator.BusinessLogic.Transactions;
 
 namespace Invest.TaxCalculator.BusinessLogic.Calculate.CalculateItem

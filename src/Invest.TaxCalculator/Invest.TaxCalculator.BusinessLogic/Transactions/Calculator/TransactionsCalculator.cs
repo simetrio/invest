@@ -19,7 +19,20 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions.Calculator
             new CouponsTransactionCalculator(),
         };
 
-        public IEnumerable<Transaction> Calculate(
+        public Transactions Calculate(
+            Operation[] operations,
+            Transaction[] transactions,
+            int year
+        )
+        {
+            return new Transactions
+            {
+                Year = year,
+                Items = CalculateOperations(operations, transactions, year).ToArray()
+            };
+        }
+
+        private IEnumerable<Transaction> CalculateOperations(
             Operation[] operations,
             Transaction[] transactions,
             int year

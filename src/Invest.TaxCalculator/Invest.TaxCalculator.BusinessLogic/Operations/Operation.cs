@@ -1,12 +1,13 @@
 using System;
 using Invest.TaxCalculator.BusinessLogic.Countries;
+using Invest.TaxCalculator.BusinessLogic.Storage;
 
 namespace Invest.TaxCalculator.BusinessLogic.Operations
 {
     /// <summary>
     ///     Операция
     /// </summary>
-    public class Operation
+    public class Operation : EntityBase
     {
         /// <summary>
         ///     Ид операции
@@ -27,7 +28,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Operations
         ///     Дата и время операции
         /// </summary>
         public DateTime DateTime { get; set; }
-        
+
         /// <summary>
         ///     Тип операции
         /// </summary>
@@ -52,5 +53,10 @@ namespace Invest.TaxCalculator.BusinessLogic.Operations
         ///     Страна
         /// </summary>
         public Country Country { get; set; }
+
+        protected override object[] GetKeys()
+        {
+            return new object[] {Id};
+        }
     }
 }
