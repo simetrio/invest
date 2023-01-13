@@ -30,6 +30,7 @@ namespace Invest.TaxCalculator.Tests
             yield return BuySellMinus();
             yield return Dividends();
             yield return Coupons();
+            yield return BuyCancellationBond();
         }
 
         private static TestCaseData BuySellPlus()
@@ -165,6 +166,38 @@ namespace Invest.TaxCalculator.Tests
             };
 
             return Create(builder, 2018, expected).SetName("Coupons");
+        }
+
+        private static TestCaseData BuyCancellationBond()
+        {
+            var builder = new EntityBuilder()
+                .WithBuyCancellationBondTransaction(
+                    9,
+                    17,
+                    275.65m,
+                    73.78m,
+                    300,
+                    75.16m,
+                    0.01m
+                );
+
+            var expected = new Report
+            {
+                Year = 2018,
+                Items = new[]
+                {
+                    new ReportItem
+                    {
+                        Country = Country.Us,
+                        Type = TransactionType.BondCancellation,
+                        Profit = 0,
+                        TaxPercent = 0,
+                        Tax = 0,
+                    }
+                }
+            };
+
+            return Create(builder, 2018, expected).SetName("BuyCancellationBond");
         }
 
         private static TestCaseData Create(

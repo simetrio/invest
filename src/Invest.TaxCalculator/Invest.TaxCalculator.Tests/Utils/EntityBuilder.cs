@@ -392,6 +392,49 @@ namespace Invest.TaxCalculator.Tests.Utils
             return this;
         }
 
+        public EntityBuilder WithBuyCancellationBondTransaction(
+            int count,
+            int totalCount,
+            decimal buyPrice,
+            decimal buyDollarPrice,
+            decimal sellPrice,
+            decimal sellDollarPrice,
+            decimal commissionPercent
+        )
+        {
+            var buy = _fixture
+                .BuildOperation(OperationType.BuyBond)
+                .With(x => x.Count, count)
+                .With(x => x.Price, buyPrice)
+                .With(x => x.DollarPrice, buyDollarPrice)
+                .Create();
+
+            var buyCommission = _fixture
+                .BuildCommission(buy)
+                .With(x => x.Price, buyPrice * count * commissionPercent)
+                .Create();
+
+            var sell = _fixture
+                .BuildOperation(OperationType.BondCancellation)
+                .With(x => x.Count, count)
+                .With(x => x.Price, sellPrice)
+                .With(x => x.DollarPrice, sellDollarPrice)
+                .Create();
+
+            var operations = new[]
+            {
+                TransactionOperation.Debit(buy, count),
+                TransactionOperation.Commission(buyCommission, count, totalCount),
+                TransactionOperation.Credit(sell, count),
+            };
+            
+            var transaction = Transaction.Create(buy, TransactionType.BondCancellation, operations);
+
+            _transactions.Add(transaction);
+
+            return this;
+        }
+
         public Operation[] Operations => _operations.ToArray();
 
         public Transaction[] Transactions => _transactions.ToArray();
