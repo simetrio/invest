@@ -31,8 +31,9 @@ namespace Invest.TaxCalculator.Tests
         private static IEnumerable<TestCaseData> TestCalculateData()
         {
             yield return BuySellShare();
-            yield return BuySellBond();
             yield return Dividends();
+            yield return BuySellBond();
+            yield return Coupons();
         }
 
         private static TestCaseData BuySellShare()
@@ -294,6 +295,60 @@ namespace Invest.TaxCalculator.Tests
             };
 
             return Create(builder, 2019, expected).SetName("BuySellBond");
+        }
+
+        private static TestCaseData Coupons()
+        {
+            var builder = new EntityBuilder()
+                .WithBuyBond(
+                    "R48948",
+                    new DateTime(2017, 12, 11),
+                    10,
+                    275.45m,
+                    69.71m,
+                    0.01m
+                )
+                .WithCoupons(
+                    "R48948",
+                    new DateTime(2018, 11, 9),
+                    10,
+                    15.74m,
+                    74.11m
+                )
+                .WithCoupons(
+                    "R48948",
+                    new DateTime(2019, 3, 15),
+                    10,
+                    17.74m,
+                    73.21m
+                )
+                .WithCoupons(
+                    "R48948",
+                    new DateTime(2020, 1, 15),
+                    10,
+                    18.15m,
+                    73.11m
+                );
+
+            var operations = new[]
+            {
+                new TransactionOperation
+                {
+                    Id = builder.Operations[^2].Id,
+                    Type = TransactionOperationType.Credit,
+                    Count = 10,
+                    DateTime = new DateTime(2019, 3, 15),
+                    Price = 17.74m,
+                    DollarPrice = 73.21m,
+                },
+            };
+
+            var expected = new[]
+            {
+                Transaction.Create(builder.Operations[0], TransactionType.Coupons, operations),
+            };
+
+            return Create(builder, 2019, expected).SetName("Coupons");
         }
 
         private static TestCaseData Create(

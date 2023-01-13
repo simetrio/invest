@@ -161,6 +161,57 @@ namespace Invest.TaxCalculator.Tests
             return this;
         }
 
+        public EntityBuilder WithBuyBond(
+            string ticker,
+            DateTime dateTime,
+            int count,
+            decimal price,
+            decimal dollarPrice,
+            decimal commissionPercent
+        )
+        {
+            var buy = _fixture
+                .BuildOperation(OperationType.BuyBond)
+                .With(x => x.Ticker, ticker)
+                .With(x => x.DateTime, dateTime)
+                .With(x => x.Count, count)
+                .With(x => x.Price, price)
+                .With(x => x.DollarPrice, dollarPrice)
+                .Create();
+
+            var buyCommission = _fixture
+                .BuildCommission(buy)
+                .With(x => x.Price, price * count * commissionPercent)
+                .Create();
+            
+            _operations.Add(buy);
+            _operations.Add(buyCommission);
+
+            return this;
+        }
+
+        public EntityBuilder WithCoupons(
+            string ticker,
+            DateTime dateTime,
+            int count,
+            decimal price,
+            decimal dollarPrice
+        )
+        {
+            var buy = _fixture
+                .BuildOperation(OperationType.Coupons)
+                .With(x => x.Ticker, ticker)
+                .With(x => x.DateTime, dateTime)
+                .With(x => x.Count, count)
+                .With(x => x.Price, price)
+                .With(x => x.DollarPrice, dollarPrice)
+                .Create();
+            
+            _operations.Add(buy);
+
+            return this;
+        }
+
         public EntityBuilder AndBuySellTransaction()
         {
             var buy = _operations[^4];
