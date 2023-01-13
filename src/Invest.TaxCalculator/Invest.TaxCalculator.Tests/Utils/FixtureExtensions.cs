@@ -2,7 +2,7 @@
 using AutoFixture.Dsl;
 using Invest.TaxCalculator.BusinessLogic.Operations;
 
-namespace Invest.TaxCalculator.Tests
+namespace Invest.TaxCalculator.Tests.Utils
 {
     public static class FixtureExtensions
     {

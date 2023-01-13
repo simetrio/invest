@@ -12,7 +12,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Calculate
             new UsBuySellShareOrBondItemCalculator(),
             new UsDividendsItemCalculator(),
             new UsBondCancellationItemCalculator(),
-            new UsDividendsItemCalculator(),
+            new UsCouponsItemCalculator(),
         };
 
         public Report Calculate(Transaction[] transactions, int year)

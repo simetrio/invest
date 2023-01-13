@@ -7,7 +7,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Calculate.CalculateItem
     {
         public bool CanCalculate(Country country, TransactionType type)
         {
-            return country == Country.Us && type == TransactionType.SellShareOrBond;
+            return country == Country.Us && type == TransactionType.BondCancellation;
         }
 
         public ReportItem Calculate(Transaction[] transactions)
