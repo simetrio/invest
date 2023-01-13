@@ -184,13 +184,20 @@ namespace Invest.TaxCalculator.Tests
                     10,
                     17.74m,
                     73.21m
+                )
+                .WithDividends(
+                    "ERV",
+                    new DateTime(2020, 1, 15),
+                    10,
+                    18.15m,
+                    73.11m
                 );
 
             var operations = new[]
             {
                 new TransactionOperation
                 {
-                    Id = builder.Operations[^1].Id,
+                    Id = builder.Operations[^2].Id,
                     Type = TransactionOperationType.Credit,
                     Count = 10,
                     DateTime = new DateTime(2019, 3, 15),
