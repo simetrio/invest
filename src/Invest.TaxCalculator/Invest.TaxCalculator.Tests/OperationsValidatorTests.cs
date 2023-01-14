@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using AutoFixture;
 using FluentAssertions;
 using Invest.TaxCalculator.BusinessLogic.Operations;
+using Invest.TaxCalculator.BusinessLogic.Storage;
 using Invest.TaxCalculator.BusinessLogic.Transactions;
+using Invest.TaxCalculator.BusinessLogic.Utils;
 using Invest.TaxCalculator.Tests.Utils;
 using NUnit.Framework;
 
@@ -12,40 +13,89 @@ namespace Invest.TaxCalculator.Tests
 {
     public class OperationsValidatorTests
     {
-        private readonly OperationsRepository _operationsRepository = new();
-        private readonly OperationsValidator _operationsValidator = new();
-        private readonly TransactionsRepository _transactionsRepository = new();
+        private readonly OperationsService _operationsService = new();
+        private readonly TransactionsService _transactionsService = new();
+        private readonly Repository _repository = new();
 
         private static readonly IFixture Fixture = new Fixture();
+
+        [SetUp]
+        public void SetUp()
+        {
+            _repository.Update(StorageElement.Empty);
+        }
 
         [TestCaseSource(nameof(ValidateFieldsData))]
         public void ValidateFields(Operation operation, string field)
         {
-            Action action = () => _operationsValidator.ValidateCreate(operation);
+            Action action = () => _operationsService.Create(operation);
+            Func<Operation[]> actual = () => _operationsService.ReadAll();
 
             action
                 .Should()
                 .Throw<AssertionException>()
                 .Where(x => x.Message.Contains($".{field} "));
+            
+            actual().Should().BeEmpty();
         }
 
         [Test]
         public void ValidateNotExists()
         {
-            var operations = Fixture
-                .BuildOperation(OperationType.BuyBond)
-                .CreateMany()
-                .ToArray();
-            var operation = operations[0];
+            var builder = new EntityBuilder()
+                .WithCoupons(
+                    "R486",
+                    new DateTime(2018, 12, 16),
+                    10,
+                    456,
+                    74
+                );
+            var operation = builder.Operations[0];
 
-            _operationsRepository.CreateOrUpdate(operations);
-            
-            Action action = () => _operationsValidator.ValidateCreate(operation);
+            builder.Operations.ForEach(_operationsService.Create);
+
+            Action action = () => _operationsService.Create(operation);
+            Func<Operation[]> actual = () => _operationsService.ReadAll();
 
             action
                 .Should()
                 .Throw<AssertionException>()
                 .Where(x => x.Message.Contains(operation.Id));
+            
+            actual().Should().BeEquivalentTo(new[] {operation});
+        }
+
+        [Test]
+        public void ValidateNotContainsInTransaction()
+        {
+            var builder = new EntityBuilder()
+                .WithCoupons(
+                    "R486",
+                    new DateTime(2018, 12, 16),
+                    10,
+                    456,
+                    74
+                )
+                .AndTransaction();
+            var operation = builder.Operations[0];
+            var transactions = new Transactions
+            {
+                Year = 2019,
+                Items = builder.Transactions,
+            };
+
+            builder.Operations.ForEach(_operationsService.Create);
+            _transactionsService.Create(transactions);
+
+            Action action = () => _operationsService.Delete(operation);
+            Func<Operation[]> actual = () => _operationsService.ReadAll();
+
+            action
+                .Should()
+                .Throw<AssertionException>()
+                .Where(x => x.Message.Contains(operation.Id));
+
+            actual().Should().BeEquivalentTo(new[] {operation});
         }
 
         private static IEnumerable<TestCaseData> ValidateFieldsData()

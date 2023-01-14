@@ -435,6 +435,22 @@ namespace Invest.TaxCalculator.Tests.Utils
             return this;
         }
 
+        public EntityBuilder AndTransaction()
+        {
+            var operation = _operations[^1];
+            
+            var operations = new[]
+            {
+                TransactionOperation.Credit(operation, operation.Count),
+            };
+            
+            var transaction = Transaction.Create(operation, TransactionType.Coupons, operations);
+
+            _transactions.Add(transaction);
+
+            return this;
+        }
+
         public Operation[] Operations => _operations.ToArray();
 
         public Transaction[] Transactions => _transactions.ToArray();
