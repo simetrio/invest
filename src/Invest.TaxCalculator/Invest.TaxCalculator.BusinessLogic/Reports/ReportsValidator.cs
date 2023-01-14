@@ -21,6 +21,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Reports
 
         private void ValidateFields(Report report)
         {
+            report.Year.Should().BePositive();
             report.Items.ForEach(ValidateFields);
         }
 

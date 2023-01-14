@@ -136,7 +136,7 @@ namespace Invest.TaxCalculator.Tests
         {
             var builder = new EntityBuilder()
                 .WithCouponsTransaction(10, 100, 70)
-                .AndReport();
+                .WithReportItem();
 
             var transactions = new Transactions
             {

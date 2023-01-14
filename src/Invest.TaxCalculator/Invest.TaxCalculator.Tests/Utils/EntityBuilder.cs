@@ -453,7 +453,7 @@ namespace Invest.TaxCalculator.Tests.Utils
             return this;
         }
 
-        public EntityBuilder AndReport()
+        public EntityBuilder WithReportItem()
         {
             var reportItem = _fixture.Create<ReportItem>();
             
