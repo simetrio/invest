@@ -24,6 +24,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions
 
         private void ValidateFields(Transactions transactions)
         {
+            transactions.Year.Should().BePositive();
             transactions.Items.ForEach(ValidateFields);
         }
 
