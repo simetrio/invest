@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using AutoFixture;
 using FluentAssertions;
 using Invest.TaxCalculator.BusinessLogic.Countries;
+using Invest.TaxCalculator.BusinessLogic.Reports;
 using Invest.TaxCalculator.BusinessLogic.Storage;
 using Invest.TaxCalculator.BusinessLogic.Transactions;
+using Invest.TaxCalculator.Tests.Utils;
 using NUnit.Framework;
 
 namespace Invest.TaxCalculator.Tests
@@ -12,6 +14,7 @@ namespace Invest.TaxCalculator.Tests
     public class TransactionsServiceTests
     {
         private readonly TransactionsService _transactionsService = new();
+        private readonly ReportsService _reportsService = new();
         private readonly Repository _repository = new();
 
         private static readonly IFixture Fixture = new Fixture();
@@ -34,6 +37,121 @@ namespace Invest.TaxCalculator.Tests
                 .Where(x => x.Message.Contains($".{field} "));
 
             actual().Should().BeEmpty();
+        }
+
+        [Test]
+        public void ValidateNotExistsYear()
+        {
+            var builder = new EntityBuilder()
+                .WithCouponsTransaction(10, 100, 70);
+
+            var transactions = new Transactions
+            {
+                Year = 2019,
+                Items = builder.Transactions,
+            };
+
+            _transactionsService.Create(transactions);
+
+            Action action = () => _transactionsService.Create(transactions);
+
+            action
+                .Should()
+                .Throw<AssertionException>()
+                .Where(x => x.Message
+                    .Contains("Expected existYears.Contains(transactions.Year) to be false, but found True"));
+        }
+
+        [Test]
+        public void ValidateExistsPreviewYear()
+        {
+            var builder = new EntityBuilder()
+                .WithCouponsTransaction(10, 100, 70);
+
+            var transactions1 = new Transactions
+            {
+                Year = 2019,
+                Items = builder.Transactions,
+            };
+
+            var transactions2 = new Transactions
+            {
+                Year = 2021,
+                Items = builder.Transactions,
+            };
+
+            _transactionsService.Create(transactions1);
+
+            Action action = () => _transactionsService.Create(transactions2);
+
+            action
+                .Should()
+                .Throw<AssertionException>()
+                .Where(x => x.Message
+                    .Contains("Expected existYears.Contains(transactions.Year - 1) to be true, but found False"));
+        }
+
+        [Test]
+        public void ValidateNotDeleteWhenHasFutureTransactions()
+        {
+            var builder = new EntityBuilder()
+                .WithCouponsTransaction(10, 100, 70);
+
+            var transactions1 = new Transactions
+            {
+                Year = 2019,
+                Items = builder.Transactions,
+            };
+
+            var transactions2 = new Transactions
+            {
+                Year = 2020,
+                Items = builder.Transactions,
+            };
+
+            _transactionsService.Create(transactions1);
+            _transactionsService.Create(transactions2);
+
+            Action action = () => _transactionsService.Delete(transactions1);
+
+            action
+                .Should()
+                .Throw<AssertionException>()
+                .Where(x => x.Message
+                    .Contains("Expected existYears.Count(x => x > transactions.Year) to be 0, but found 1")
+                );
+        }
+
+        [Test]
+        public void ValidateNotExistsReport()
+        {
+            var builder = new EntityBuilder()
+                .WithCouponsTransaction(10, 100, 70)
+                .AndReport();
+
+            var transactions = new Transactions
+            {
+                Year = 2019,
+                Items = builder.Transactions,
+            };
+
+            var report = new Report
+            {
+                Year = 2019,
+                Items = builder.ReportItems,
+            };
+
+            _transactionsService.Create(transactions);
+            _reportsService.Create(report);
+
+            Action action = () => _transactionsService.Delete(transactions);
+
+            action
+                .Should()
+                .Throw<AssertionException>()
+                .Where(x => x.Message
+                    .Contains("Expected existYears.Contains(transactions.Year) to be false, but found True")
+                );
         }
 
         private static IEnumerable<TestCaseData> ValidateFieldsData()
@@ -84,10 +202,7 @@ namespace Invest.TaxCalculator.Tests
             ).SetName(nameof(Transaction.Ticker));
 
             yield return CreateTransaction(
-                x =>
-                {
-                    x.Ticker = Fixture.Create<string>();
-                },
+                x => { x.Ticker = Fixture.Create<string>(); },
                 nameof(Transaction.Operations)
             ).SetName(nameof(Transaction.Operations));
 

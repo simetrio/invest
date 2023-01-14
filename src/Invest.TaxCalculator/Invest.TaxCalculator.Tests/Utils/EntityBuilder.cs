@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using AutoFixture;
 using Invest.TaxCalculator.BusinessLogic.Operations;
+using Invest.TaxCalculator.BusinessLogic.Reports;
 using Invest.TaxCalculator.BusinessLogic.Transactions;
 
 namespace Invest.TaxCalculator.Tests.Utils
@@ -11,6 +12,7 @@ namespace Invest.TaxCalculator.Tests.Utils
         private readonly IFixture _fixture = new Fixture();
         private readonly List<Operation> _operations = new();
         private readonly List<Transaction> _transactions = new();
+        private readonly List<ReportItem> _reportItems = new();
 
         public EntityBuilder WithBuySellShare(
             string ticker,
@@ -451,8 +453,19 @@ namespace Invest.TaxCalculator.Tests.Utils
             return this;
         }
 
+        public EntityBuilder AndReport()
+        {
+            var reportItem = _fixture.Create<ReportItem>();
+            
+            _reportItems.Add(reportItem);
+
+            return this;
+        }
+
         public Operation[] Operations => _operations.ToArray();
 
         public Transaction[] Transactions => _transactions.ToArray();
+        
+        public ReportItem[] ReportItems => _reportItems.ToArray();
     }
 }
