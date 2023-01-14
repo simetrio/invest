@@ -54,12 +54,15 @@ namespace Invest.TaxCalculator.Tests
             _transactionsService.Create(transactions);
 
             Action action = () => _transactionsService.Create(transactions);
+            Func<Transactions[]> actual = () => _transactionsService.ReadAll();
 
             action
                 .Should()
                 .Throw<AssertionException>()
                 .Where(x => x.Message
                     .Contains("Expected existYears.Contains(transactions.Year) to be false, but found True"));
+
+            actual().Should().BeEquivalentTo(new[] {transactions});
         }
 
         [Test]
@@ -83,12 +86,15 @@ namespace Invest.TaxCalculator.Tests
             _transactionsService.Create(transactions1);
 
             Action action = () => _transactionsService.Create(transactions2);
+            Func<Transactions[]> actual = () => _transactionsService.ReadAll();
 
             action
                 .Should()
                 .Throw<AssertionException>()
                 .Where(x => x.Message
                     .Contains("Expected existYears.Contains(transactions.Year - 1) to be true, but found False"));
+
+            actual().Should().BeEquivalentTo(new[] {transactions1});
         }
 
         [Test]
@@ -113,6 +119,7 @@ namespace Invest.TaxCalculator.Tests
             _transactionsService.Create(transactions2);
 
             Action action = () => _transactionsService.Delete(transactions1);
+            Func<Transactions[]> actual = () => _transactionsService.ReadAll();
 
             action
                 .Should()
@@ -120,6 +127,8 @@ namespace Invest.TaxCalculator.Tests
                 .Where(x => x.Message
                     .Contains("Expected existYears.Count(x => x > transactions.Year) to be 0, but found 1")
                 );
+
+            actual().Should().BeEquivalentTo(new[] {transactions1, transactions2});
         }
 
         [Test]
@@ -145,6 +154,7 @@ namespace Invest.TaxCalculator.Tests
             _reportsService.Create(report);
 
             Action action = () => _transactionsService.Delete(transactions);
+            Func<Transactions[]> actual = () => _transactionsService.ReadAll();
 
             action
                 .Should()
@@ -152,6 +162,28 @@ namespace Invest.TaxCalculator.Tests
                 .Where(x => x.Message
                     .Contains("Expected existYears.Contains(transactions.Year) to be false, but found True")
                 );
+
+            actual().Should().BeEquivalentTo(new[] {transactions});
+        }
+
+        [Test]
+        public void Delete()
+        {
+            var builder = new EntityBuilder()
+                .WithCouponsTransaction(10, 100, 70);
+
+            var transactions = new Transactions
+            {
+                Year = 2019,
+                Items = builder.Transactions,
+            };
+
+            _transactionsService.Create(transactions);
+            _transactionsService.Delete(transactions);
+
+            var actual = _transactionsService.ReadAll();
+
+            actual.Should().BeEmpty();
         }
 
         private static IEnumerable<TestCaseData> ValidateFieldsData()
