@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AutoFixture;
 using FluentAssertions;
 using Invest.TaxCalculator.BusinessLogic.Operations;
 using Invest.TaxCalculator.BusinessLogic.Transactions;
+using Invest.TaxCalculator.Tests.Utils;
 using NUnit.Framework;
 
 namespace Invest.TaxCalculator.Tests
@@ -17,7 +19,7 @@ namespace Invest.TaxCalculator.Tests
         private static readonly IFixture Fixture = new Fixture();
 
         [TestCaseSource(nameof(ValidateFieldsData))]
-        public void ValidateFields_Should_ThrowException(Operation operation, string field)
+        public void ValidateFields(Operation operation, string field)
         {
             Action action = () => _operationsValidator.ValidateCreate(operation);
 
@@ -27,13 +29,32 @@ namespace Invest.TaxCalculator.Tests
                 .Where(x => x.Message.Contains($".{field} "));
         }
 
+        [Test]
+        public void ValidateNotExists()
+        {
+            var operations = Fixture
+                .BuildOperation(OperationType.BuyBond)
+                .CreateMany()
+                .ToArray();
+            var operation = operations[0];
+
+            _operationsRepository.CreateOrUpdate(operations);
+            
+            Action action = () => _operationsValidator.ValidateCreate(operation);
+
+            action
+                .Should()
+                .Throw<AssertionException>()
+                .Where(x => x.Message.Contains(operation.Id));
+        }
+
         private static IEnumerable<TestCaseData> ValidateFieldsData()
         {
             yield return CreateOperation(
                 x => { },
                 nameof(Operation.Id)
             ).SetName(nameof(Operation.Id));
-            
+
             yield return CreateOperation(
                 x =>
                 {
@@ -42,15 +63,12 @@ namespace Invest.TaxCalculator.Tests
                 },
                 nameof(Operation.ParentId)
             ).SetName(nameof(Operation.ParentId));
-            
+
             yield return CreateOperation(
-                x =>
-                {
-                    x.Id = Fixture.Create<string>();
-                },
+                x => { x.Id = Fixture.Create<string>(); },
                 nameof(Operation.Ticker)
             ).SetName(nameof(Operation.Ticker));
-            
+
             yield return CreateOperation(
                 x =>
                 {
@@ -59,7 +77,7 @@ namespace Invest.TaxCalculator.Tests
                 },
                 nameof(Operation.DateTime)
             ).SetName(nameof(Operation.DateTime));
-            
+
             yield return CreateOperation(
                 x =>
                 {
@@ -72,7 +90,7 @@ namespace Invest.TaxCalculator.Tests
                 },
                 nameof(Operation.Count)
             ).SetName(nameof(Operation.Count));
-            
+
             yield return CreateOperation(
                 x =>
                 {
@@ -82,7 +100,7 @@ namespace Invest.TaxCalculator.Tests
                 },
                 nameof(Operation.Count)
             ).SetName(nameof(Operation.Count));
-            
+
             yield return CreateOperation(
                 x =>
                 {
@@ -93,7 +111,7 @@ namespace Invest.TaxCalculator.Tests
                 },
                 nameof(Operation.Price)
             ).SetName(nameof(Operation.Price));
-            
+
             yield return CreateOperation(
                 x =>
                 {
