@@ -11,7 +11,7 @@ using NUnit.Framework;
 
 namespace Invest.TaxCalculator.Tests
 {
-    public class OperationsValidatorTests
+    public class OperationsServiceTests
     {
         private readonly OperationsService _operationsService = new();
         private readonly TransactionsService _transactionsService = new();
@@ -96,6 +96,27 @@ namespace Invest.TaxCalculator.Tests
                 .Where(x => x.Message.Contains(operation.Id));
 
             actual().Should().BeEquivalentTo(new[] {operation});
+        }
+
+        [Test]
+        public void Delete()
+        {
+            var builder = new EntityBuilder()
+                .WithCoupons(
+                    "R486",
+                    new DateTime(2018, 12, 16),
+                    10,
+                    456,
+                    74
+                );
+            var operation = builder.Operations[0];
+
+            builder.Operations.ForEach(_operationsService.Create);
+
+            _operationsService.Delete(operation);
+            var actual = _operationsService.ReadAll();
+
+            actual.Should().BeEmpty();
         }
 
         private static IEnumerable<TestCaseData> ValidateFieldsData()
