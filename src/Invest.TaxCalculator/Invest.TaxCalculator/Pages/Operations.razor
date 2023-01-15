@@ -1,0 +1,34 @@
+﻿@page "/operations"
+
+@using MediatR
+@using Invest.TaxCalculator.BusinessLogic.Operations
+@using Invest.TaxCalculator.BusinessLogic.Operations.Dto
+
+@inject Mediator Mediator
+
+<PageTitle>Операции</PageTitle>
+
+<h1>Операции</h1>
+
+@if (_operations == null)
+{
+    <p>
+        <em>Загрузка...</em>
+    </p>
+}
+else
+{
+    @foreach (var operation in _operations.Items)
+    {
+        <div>@operation.Ticker</div>
+    }
+}
+
+@code {
+    private OperationsDto? _operations;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _operations = await Mediator.Send(new ReadOperationsCommand());
+    }
+}

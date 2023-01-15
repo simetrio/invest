@@ -1,10 +1,13 @@
-﻿namespace Invest.TaxCalculator.BusinessLogic
+﻿using MediatR;
+
+namespace Invest.TaxCalculator.BusinessLogic
 {
     public static class Container
     {
         public static void ConfigureContainer(this WebApplicationBuilder builder)
         {
-            builder.Services.AddSingleton<WeatherForecastService>();
+            builder.Services.AddMediatR(typeof(Program));
+            builder.Services.AddSingleton<Mediator>();
         }
     }
 }
