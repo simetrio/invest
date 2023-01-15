@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using FluentAssertions;
 using Invest.TaxCalculator.BusinessLogic.Calculate;
 using Invest.TaxCalculator.BusinessLogic.Countries;

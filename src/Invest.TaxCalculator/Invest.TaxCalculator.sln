@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invest.TaxCalculator.Busine
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invest.TaxCalculator.Tests", "Invest.TaxCalculator.Tests\Invest.TaxCalculator.Tests.csproj", "{CBB286E4-5F81-46A0-9C19-42358D0371F4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invest.TaxCalculator", "Invest.TaxCalculator\Invest.TaxCalculator.csproj", "{634A26F5-D303-4886-A3E2-5918BF8D7EE3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{CBB286E4-5F81-46A0-9C19-42358D0371F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CBB286E4-5F81-46A0-9C19-42358D0371F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CBB286E4-5F81-46A0-9C19-42358D0371F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{634A26F5-D303-4886-A3E2-5918BF8D7EE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{634A26F5-D303-4886-A3E2-5918BF8D7EE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{634A26F5-D303-4886-A3E2-5918BF8D7EE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{634A26F5-D303-4886-A3E2-5918BF8D7EE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
