@@ -51,13 +51,13 @@
     <tr>
         <td>Цена:</td>
         <td>
-            <input @bind="@_price" @bind:event="oninput" placeholder="151.16"/>
+            <input @bind="@_price" @bind:event="oninput" placeholder="151,16"/>
         </td>
     </tr>
     <tr>
         <td>Курс доллара:</td>
         <td>
-            <input @bind="@_dollarPrice" @bind:event="oninput" placeholder="71.25"/>
+            <input @bind="@_dollarPrice" @bind:event="oninput" placeholder="71,25"/>
         </td>
     </tr>
     <tr>
@@ -76,10 +76,10 @@
     </tr>
 </table>
 
-<hr/>
-
-@foreach (var year in _years)
+@foreach (var year in _operations.Years)
 {
+    <hr/>
+    
     <h4>Операции за @year год</h4>
 
     <table width="100%">
@@ -98,7 +98,7 @@
         </tr>
         </thead>
         <tbody>
-        @foreach (var operation in _operationsByYear[year])
+        @foreach (var operation in _operations.OperationsByYear[year])
         {
             <tr>
                 <td>@operation.Id</td>
@@ -120,8 +120,7 @@
 }
 
 @code {
-    private Dictionary<int, OperationDto[]> _operationsByYear = new();
-    private int[] _years = Array.Empty<int>();
+    private OperationsDto _operations = new();
     private string _id = "";
     private string _parentId = "";
     private string _ticker = "";
@@ -169,14 +168,7 @@
 
     private async Task ReadOperations()
     {
-        var operations = await Mediator.Send(new ReadOperationsCommand());
-
-        _operationsByYear = operations
-            .Items
-            .GroupBy(x => x.DateTime.Year)
-            .ToDictionary(x => x.Key, x => x.ToArray());
-
-        _years = operations.Items.Select(x => x.DateTime.Year).Distinct().ToArray();
+        _operations = await Mediator.Send(new ReadOperationsCommand());
     }
 
     private OperationDto GetOperation()
@@ -189,8 +181,8 @@
             DateTime = DateTime.Parse(_dateTime),
             Type = Enum.Parse<OperationType>(_type),
             Count = int.Parse(_count),
-            Price = decimal.Parse(_price),
-            DollarPrice = decimal.Parse(_dollarPrice),
+            Price = decimal.Parse(_price.Replace(".", ",")),
+            DollarPrice = decimal.Parse(_dollarPrice.Replace(".", ",")),
             Country = Enum.Parse<Country>(_country),
         };
     }

@@ -2,6 +2,8 @@
 {
     public class OperationsDto
     {
-        public OperationDto[] Items { get; set; } = Array.Empty<OperationDto>();
+        public Dictionary<int, OperationDto[]> OperationsByYear { get; set; } = new();
+
+        public int[] Years { get; set; } = Array.Empty<int>();
     }
 }
