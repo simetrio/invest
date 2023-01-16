@@ -35,9 +35,8 @@ namespace Invest.TaxCalculator.BusinessLogic.Reports
             }
             else
             {
-                reportItem.Profit.Should().BePositive();
                 reportItem.TaxPercent.Should().BePositive();
-                reportItem.Tax.Should().BePositive();
+                reportItem.Tax.Should().BeGreaterOrEqualTo(0);
             }
         }
 

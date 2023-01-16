@@ -1,0 +1,44 @@
+﻿@page "/inventory"
+
+@using MediatR
+@using Invest.TaxCalculator.BusinessLogic.Inventories
+@using Invest.TaxCalculator.BusinessLogic.Inventories.Dto
+
+@inject Mediator Mediator
+
+<PageTitle>Инвентаризация</PageTitle>
+
+<h1>Инвентаризация</h1>
+
+<table width="100%">
+    <thead>
+    <tr>
+        <th>Тикер</th>
+        <th>Кол-во</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var inventory in _inventories)
+    {
+        <tr>
+            <td>@inventory.Ticker</td>
+            <td>@inventory.Count</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@code {
+    private InventoryItemDto[] _inventories = Array.Empty<InventoryItemDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ReadInventories();
+    }
+
+    private async Task ReadInventories()
+    {
+        _inventories = await Mediator.Send(new ReadInventoriesCommand());
+    }
+
+}

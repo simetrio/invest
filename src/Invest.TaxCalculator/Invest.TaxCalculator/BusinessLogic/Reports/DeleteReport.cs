@@ -10,11 +10,11 @@ namespace Invest.TaxCalculator.BusinessLogic.Reports
 
         public Task<Unit> Handle(DeleteReportCommand request, CancellationToken cancellationToken)
         {
-            var report = _reportService.ReadAll().Single(x => x.Year == request.Year);
-            var transactions = _transactionsService.ReadAll().Single(x => x.Year == request.Year);
+            var report = _reportService.ReadAll().SingleOrDefault(x => x.Year == request.Year);
+            var transactions = _transactionsService.ReadAll().SingleOrDefault(x => x.Year == request.Year);
             
-            _reportService.Delete(report);
-            _transactionsService.Delete(transactions);
+            if(report != null) _reportService.Delete(report);
+            if(transactions != null) _transactionsService.Delete(transactions);
 
             return Unit.Task;
         }

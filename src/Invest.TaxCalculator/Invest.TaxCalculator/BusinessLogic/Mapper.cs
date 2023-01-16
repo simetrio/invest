@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Invest.TaxCalculator.BusinessLogic.Inventories;
+using Invest.TaxCalculator.BusinessLogic.Inventories.Dto;
 using Invest.TaxCalculator.BusinessLogic.Operations;
 using Invest.TaxCalculator.BusinessLogic.Operations.Dto;
 using Invest.TaxCalculator.BusinessLogic.Reports;
@@ -33,6 +35,8 @@ namespace Invest.TaxCalculator.BusinessLogic
             
             cfg.CreateMap<ReportItem, ReportItemDto>().ReverseMap();
             cfg.CreateMap<Report, ReportDto>().ReverseMap();
+            
+            cfg.CreateMap<InventoryItem, InventoryItemDto>().ReverseMap();
         }
     }
 }

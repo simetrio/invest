@@ -249,7 +249,7 @@
 
     private string[] GetTypes<T>() where T : Enum
     {
-        return Enum.GetNames(typeof(OperationType))
+        return Enum.GetNames(typeof(T))
             .OrderBy(x => x)
             .ToArray();
     }
