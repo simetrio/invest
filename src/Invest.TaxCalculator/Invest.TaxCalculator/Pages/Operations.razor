@@ -78,10 +78,37 @@
 
 <hr/>
 
-@foreach (var operation in _operations!.Items)
-{
-    <div>@operation.Ticker</div>
-}
+<table width="100%">
+    <thead>
+    <tr>
+        <th>Ид</th>
+        <th>Ид родителя</th>
+        <th>Тикер</th>
+        <th>Дата и время</th>
+        <th>Тип</th>
+        <th>Кол-во</th>
+        <th>Цена</th>
+        <th>Курс доллара</th>
+        <th>Страна</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var operation in _operations!.Items)
+    {
+        <tr>
+            <td>@operation.Id</td>
+            <td>@operation.ParentId</td>
+            <td>@operation.Ticker</td>
+            <td>@operation.DateTime</td>
+            <td>@operation.Type</td>
+            <td>@operation.Count</td>
+            <td>@operation.Price</td>
+            <td>@operation.DollarPrice</td>
+            <td>@operation.Country</td>
+        </tr>
+    }
+    </tbody>
+</table>
 
 @code {
     private OperationsDto? _operations = new();
@@ -98,34 +125,57 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _operations = await Mediator.Send(new ReadOperationsCommand());
+        await LoadOperations();
     }
 
     private async Task Create()
     {
         try
         {
-            var operation = new OperationDto
-            {
-                Id = _id,
-                ParentId = _parentId,
-                Ticker = _ticker,
-                DateTime = DateTime.Parse(_dateTime), 
-                Type = Enum.Parse<OperationType>(_type), 
-                Count = int.Parse(_count), 
-                Price = decimal.Parse(_price), 
-                DollarPrice = decimal.Parse(_dollarPrice), 
-                Country = Enum.Parse<Country>(_country),
-            };
-        
+            var operation = GetOperation();
             await Mediator.Send(new CreateOperationCommand(operation));
-            _operations = await Mediator.Send(new ReadOperationsCommand()); 
+
+            ClearOperation();
+            await LoadOperations();
         }
         catch (Exception e)
         {
             _error = e.Message;
-            Console.WriteLine(e);
         }
+    }
+
+    private async Task LoadOperations()
+    {
+        _operations = await Mediator.Send(new ReadOperationsCommand());
+    }
+
+    private OperationDto GetOperation()
+    {
+        return new OperationDto
+        {
+            Id = _id,
+            ParentId = _parentId,
+            Ticker = _ticker,
+            DateTime = DateTime.Parse(_dateTime),
+            Type = Enum.Parse<OperationType>(_type),
+            Count = int.Parse(_count),
+            Price = decimal.Parse(_price),
+            DollarPrice = decimal.Parse(_dollarPrice),
+            Country = Enum.Parse<Country>(_country),
+        };
+    }
+
+    private void ClearOperation()
+    {
+        _id = "";
+        _parentId = "";
+        _ticker = "";
+        _dateTime = "";
+        _type = "";
+        _count = "";
+        _price = "";
+        _dollarPrice = "";
+        _country = "";
     }
 
 }
