@@ -90,6 +90,7 @@
         <th>Цена</th>
         <th>Курс доллара</th>
         <th>Страна</th>
+        <th>&nbsp;</th>
     </tr>
     </thead>
     <tbody>
@@ -105,6 +106,7 @@
             <td>@operation.Price</td>
             <td>@operation.DollarPrice</td>
             <td>@operation.Country</td>
+            <td><button @onclick="@(_ => Delete(operation.Id))" id="@operation.Id">&#10060;</button></td>
         </tr>
     }
     </tbody>
@@ -136,6 +138,19 @@
             await Mediator.Send(new CreateOperationCommand(operation));
 
             ClearOperation();
+            await LoadOperations();
+        }
+        catch (Exception e)
+        {
+            _error = e.Message;
+        }
+    }
+
+    private async Task Delete(string id)
+    {
+        try
+        {
+            await Mediator.Send(new DeleteOperationCommand(id));
             await LoadOperations();
         }
         catch (Exception e)
