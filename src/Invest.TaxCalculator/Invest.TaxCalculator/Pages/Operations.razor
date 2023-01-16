@@ -40,7 +40,13 @@
     <tr>
         <td>Тип:</td>
         <td>
-            <input @bind="@_type" @bind:event="oninput"/>
+            <select @bind="@_type">
+                <option value="">-- выберите тип операции</option>
+                @foreach (var type in GetTypes<OperationType>())
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
         </td>
     </tr>
     <tr>
@@ -64,7 +70,13 @@
     <tr>
         <td>Страна:</td>
         <td>
-            <input @bind="@_country" @bind:event="oninput"/>
+            <select @bind="@_country">
+                <option value="">-- выберите страну</option>
+                @foreach (var country in GetTypes<Country>())
+                {
+                    <option value="@country">@country</option>
+                }
+            </select>
         </td>
     </tr>
     <tr>
@@ -233,6 +245,13 @@
         _price = "";
         _dollarPrice = "";
         _country = "";
+    }
+
+    private string[] GetTypes<T>() where T : Enum
+    {
+        return Enum.GetNames(typeof(OperationType))
+            .OrderBy(x => x)
+            .ToArray();
     }
 
 }
