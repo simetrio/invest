@@ -78,42 +78,50 @@
 
 <hr/>
 
-<table width="100%">
-    <thead>
-    <tr>
-        <th>Ид</th>
-        <th>Ид родителя</th>
-        <th>Тикер</th>
-        <th>Дата и время</th>
-        <th>Тип</th>
-        <th>Кол-во</th>
-        <th>Цена</th>
-        <th>Курс доллара</th>
-        <th>Страна</th>
-        <th>&nbsp;</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var operation in _operations!.Items)
-    {
+@foreach (var year in _years)
+{
+    <h4>Операции за @year год</h4>
+
+    <table width="100%">
+        <thead>
         <tr>
-            <td>@operation.Id</td>
-            <td>@operation.ParentId</td>
-            <td>@operation.Ticker</td>
-            <td>@operation.DateTime</td>
-            <td>@operation.Type</td>
-            <td>@operation.Count</td>
-            <td>@operation.Price</td>
-            <td>@operation.DollarPrice</td>
-            <td>@operation.Country</td>
-            <td><button @onclick="@(_ => Delete(operation.Id))" id="@operation.Id">&#10060;</button></td>
+            <th>Ид</th>
+            <th>Ид родителя</th>
+            <th>Тикер</th>
+            <th>Дата и время</th>
+            <th>Тип</th>
+            <th>Кол-во</th>
+            <th>Цена</th>
+            <th>Курс доллара</th>
+            <th>Страна</th>
+            <th>&nbsp;</th>
         </tr>
-    }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        @foreach (var operation in _operationsByYear[year])
+        {
+            <tr>
+                <td>@operation.Id</td>
+                <td>@operation.ParentId</td>
+                <td>@operation.Ticker</td>
+                <td>@operation.DateTime</td>
+                <td>@operation.Type</td>
+                <td>@operation.Count</td>
+                <td>@operation.Price</td>
+                <td>@operation.DollarPrice</td>
+                <td>@operation.Country</td>
+                <td>
+                    <button @onclick="@(_ => Delete(operation.Id))" id="@operation.Id">&#10060;</button>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
 
 @code {
-    private OperationsDto? _operations = new();
+    private Dictionary<int, OperationDto[]> _operationsByYear = new();
+    private int[] _years = Array.Empty<int>();
     private string _id = "";
     private string _parentId = "";
     private string _ticker = "";
@@ -127,7 +135,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await LoadOperations();
+        await ReadOperations();
     }
 
     private async Task Create()
@@ -138,7 +146,7 @@
             await Mediator.Send(new CreateOperationCommand(operation));
 
             ClearOperation();
-            await LoadOperations();
+            await ReadOperations();
         }
         catch (Exception e)
         {
@@ -151,7 +159,7 @@
         try
         {
             await Mediator.Send(new DeleteOperationCommand(id));
-            await LoadOperations();
+            await ReadOperations();
         }
         catch (Exception e)
         {
@@ -159,9 +167,16 @@
         }
     }
 
-    private async Task LoadOperations()
+    private async Task ReadOperations()
     {
-        _operations = await Mediator.Send(new ReadOperationsCommand());
+        var operations = await Mediator.Send(new ReadOperationsCommand());
+
+        _operationsByYear = operations
+            .Items
+            .GroupBy(x => x.DateTime.Year)
+            .ToDictionary(x => x.Key, x => x.ToArray());
+
+        _years = operations.Items.Select(x => x.DateTime.Year).Distinct().ToArray();
     }
 
     private OperationDto GetOperation()
