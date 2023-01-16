@@ -162,15 +162,11 @@ namespace Invest.TaxCalculator.Tests
             ).SetName(nameof(ReportItem.Tax));
 
             yield return CreateReportItem(
-                x => { x.TaxPercent = Fixture.Create<decimal>(); },
-                nameof(ReportItem.Profit)
-            ).SetName(nameof(ReportItem.Profit));
-
-            yield return CreateReportItem(
                 x =>
                 {
                     x.Profit = Fixture.Create<decimal>();
                     x.TaxPercent = Fixture.Create<decimal>();
+                    x.Tax = -Fixture.Create<decimal>();
                 },
                 nameof(ReportItem.Tax)
             ).SetName(nameof(ReportItem.Tax));

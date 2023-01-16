@@ -29,6 +29,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Inventories
                     Ticker = x.Ticker,
                     Count = x.Buy - x.Sell,
                 })
+                .Where(x => x.Count != 0)
                 .ToArray();
         }
 
