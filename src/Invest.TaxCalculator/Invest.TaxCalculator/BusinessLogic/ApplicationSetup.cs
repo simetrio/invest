@@ -11,7 +11,10 @@ namespace Invest.TaxCalculator.BusinessLogic
 
         private static void SetupRepository()
         {
+            var fileInfo = new FileInfo(System.Reflection.Assembly.GetExecutingAssembly().Location);
+
             Repository.FileName = "TaxCalculator.txt";
+            Repository.DirectoryName = fileInfo.DirectoryName!;
         }
     }
 }

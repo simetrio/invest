@@ -21,7 +21,7 @@ namespace Invest.TaxCalculator.BusinessLogic
 
         private static void ConfigureMapper(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<Operation, OperationDto>();
+            cfg.CreateMap<Operation, OperationDto>().ReverseMap();
         }
     }
 }

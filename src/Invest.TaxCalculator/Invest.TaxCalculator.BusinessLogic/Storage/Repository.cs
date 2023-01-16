@@ -12,7 +12,8 @@ namespace Invest.TaxCalculator.BusinessLogic.Storage
         private static readonly object Lock = new();
 
         // В приложении необходимо настроить имя файла
-        public static string FileName { get; set; } = "TaxCalculatorDefault.txt";
+        public static string FileName { get; set; } = "TaxCalculator.txt";
+        public static string DirectoryName { get; set; } = Directory.GetCurrentDirectory();
 
         public void Update(StorageElement storageElement)
         {
@@ -45,17 +46,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Storage
 
         private static string CalculateFileName()
         {
-            var directory = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
-                "invest"
-            );
-
-            if (!Directory.Exists(directory))
-            {
-                Directory.CreateDirectory(directory);
-            }
-
-            return Path.Combine(directory, FileName);
+            return Path.Combine(DirectoryName, FileName);
         }
     }
 }

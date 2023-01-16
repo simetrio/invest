@@ -2,6 +2,6 @@
 {
     public class OperationsDto
     {
-        public OperationDto[] Items { get; set; }
+        public OperationDto[] Items { get; set; } = Array.Empty<OperationDto>();
     }
 }
