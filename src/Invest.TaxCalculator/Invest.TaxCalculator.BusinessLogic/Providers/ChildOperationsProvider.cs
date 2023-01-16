@@ -14,7 +14,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Providers
         public ChildOperationsProvider(Operation[] operations)
         {
             _operationsByParentId = operations
-                .Where(x => x.ParentId != null)
+                .Where(x => !string.IsNullOrEmpty(x.ParentId))
                 .ToDictionary(x => x.ParentId!);
         }
 

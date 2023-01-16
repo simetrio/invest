@@ -4,7 +4,6 @@ namespace Invest.TaxCalculator.BusinessLogic.Operations
 {
     public class DeleteOperationHandler : IRequestHandler<DeleteOperationCommand>
     {
-        private readonly Mapper _mapper = new();
         private readonly OperationsService _operationsService = new();
 
         public Task<Unit> Handle(DeleteOperationCommand request, CancellationToken cancellationToken)

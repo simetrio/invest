@@ -4,6 +4,7 @@
 @using Invest.TaxCalculator.BusinessLogic.Operations
 @using Invest.TaxCalculator.BusinessLogic.Operations.Dto
 @using Invest.TaxCalculator.BusinessLogic.Countries
+@using Invest.TaxCalculator.BusinessLogic.Reports
 
 @inject Mediator Mediator
 
@@ -76,10 +77,24 @@
     </tr>
 </table>
 
+<hr/>
+
+<table>
+    <tr>
+        <td>Создать отчет за:</td>
+        <td>
+            <input @bind="@_year" @bind:event="oninput"/>
+        </td>
+        <td>
+            <button @onclick="CreateReport">Создать</button>
+        </td>
+    </tr>
+</table>
+
 @foreach (var year in _operations.Years)
 {
     <hr/>
-    
+
     <h4>Операции за @year год</h4>
 
     <table width="100%">
@@ -111,7 +126,7 @@
                 <td>@operation.DollarPrice</td>
                 <td>@operation.Country</td>
                 <td>
-                    <button @onclick="@(_ => Delete(operation.Id))" id="@operation.Id">&#10060;</button>
+                    <button @onclick="@(_ => Delete(operation.Id))">&#10060;</button>
                 </td>
             </tr>
         }
@@ -131,6 +146,7 @@
     private string _dollarPrice = "";
     private string _country = "";
     private string _error = "";
+    private string _year = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -150,6 +166,24 @@
         catch (Exception e)
         {
             _error = e.Message;
+            Console.WriteLine(e);
+        }
+    }
+
+    private async Task CreateReport()
+    {
+        try
+        {
+            var year = int.Parse(_year);
+
+            await Mediator.Send(new CreateReportCommand(year));
+
+            _year = "";
+        }
+        catch (Exception e)
+        {
+            _error = e.Message;
+            Console.WriteLine(e);
         }
     }
 
@@ -163,6 +197,7 @@
         catch (Exception e)
         {
             _error = e.Message;
+            Console.WriteLine(e);
         }
     }
 

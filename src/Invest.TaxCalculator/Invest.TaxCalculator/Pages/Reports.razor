@@ -1,0 +1,77 @@
+﻿@page "/reports"
+
+@using MediatR
+@using Invest.TaxCalculator.BusinessLogic.Reports
+@using Invest.TaxCalculator.BusinessLogic.Reports.Dto
+
+@inject Mediator Mediator
+
+<PageTitle>Сделки</PageTitle>
+
+<h1>Сделки</h1>
+
+<div>@_error</div>
+
+@foreach (var reports in _reports)
+{
+    <hr/>
+
+    <h4>Налоги за @reports.Year год</h4>
+    <div>
+        <button @onclick="@(_ => Delete(reports.Year))">Удалить</button>
+    </div>
+
+    <table width="100%">
+        <thead>
+        <tr>
+            <th>Страна</th>
+            <th>Тип</th>
+            <th>Прибыль</th>
+            <th>Ставка налога</th>
+            <th>Налог</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var report in reports.Items)
+        {
+            <tr>
+                <td>@report.Country</td>
+                <td>@report.Type</td>
+                <td>@report.Profit</td>
+                <td>@report.TaxPercent</td>
+                <td>@report.Tax</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
+
+@code {
+    private ReportDto[] _reports = Array.Empty<ReportDto>();
+    private string _error = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ReadReports();
+    }
+
+    private async Task Delete(int year)
+    {
+        try
+        {
+            await Mediator.Send(new DeleteReportCommand(year));
+            await ReadReports();
+        }
+        catch (Exception e)
+        {
+            _error = e.Message;
+            Console.WriteLine(e);
+        }
+    }
+
+    private async Task ReadReports()
+    {
+        _reports = await Mediator.Send(new ReadReportsCommand());
+    }
+
+}

@@ -1,3 +1,4 @@
+using System;
 using Invest.TaxCalculator.BusinessLogic.Countries;
 using Invest.TaxCalculator.BusinessLogic.Operations;
 
@@ -10,6 +11,8 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions
         public Country Country { get; set; }
 
         public TransactionType Type { get; set; }
+
+        public DateTime DateTime { get; set; }
 
         public TransactionOperation[] Operations { get; set; }
 
@@ -24,6 +27,7 @@ namespace Invest.TaxCalculator.BusinessLogic.Transactions
                 Ticker = operation.Ticker,
                 Country = operation.Country,
                 Type = type,
+                DateTime = operation.DateTime,
                 Operations = operations,
             };
         }
