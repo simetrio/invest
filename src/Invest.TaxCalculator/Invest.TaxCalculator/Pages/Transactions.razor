@@ -19,7 +19,7 @@
 @foreach (var transactions in _transactions)
 {
     <h3>Сделки за @transactions.Year год</h3>
-   
+
     <table class="table table-hover mt-4">
         <thead>
         <tr>
@@ -38,12 +38,35 @@
                 <td>@transaction.Country</td>
                 <td>@transaction.Type</td>
                 <td>@transaction.DateTime</td>
-                <td>@transaction.Operations.Length</td>
+                <td>
+                    <table class="table table-hover table-sm my-0">
+                        <tr>
+                            <th>Ид</th>
+                            <th>Тип</th>
+                            <th>Кол-во</th>
+                            <th>Дата</th>
+                            <th>Цена</th>
+                            <th>Доллар</th>
+                        </tr>
+                        @foreach (var operation in transaction.Operations)
+                        {
+                            <tr>
+                                <td>@operation.Id</td>
+                                <td>@operation.Type</td>
+                                <td>@operation.Count</td>
+                                <td>@operation.DateTime</td>
+                                <td>@operation.Price.ToString("C", _dollar)</td>
+                                <td>@operation.DollarPrice.ToString("C", _dollar)</td>
+                            </tr>
+                        }
+                    </table>
+
+                </td>
             </tr>
         }
         </tbody>
     </table>
-    
+
     <p class="mb-5">
         <button class="btn btn-primary" @onclick="@(_ => Delete(transactions.Year))">Удалить</button>
     </p>
