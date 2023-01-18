@@ -36,9 +36,9 @@
             <tr>
                 <td>@report.Country</td>
                 <td>@report.Type</td>
-                <td>@report.Profit</td>
-                <td>@report.TaxPercent</td>
-                <td>@report.Tax</td>
+                <td>@report.Profit.ToString("C", _ruble)</td>
+                <td>@(report.TaxPercent)%</td>
+                <td>@report.Tax.ToString("C", _ruble)</td>
             </tr>
         }
         </tbody>
@@ -52,6 +52,7 @@
 @code {
     private ReportDto[] _reports = Array.Empty<ReportDto>();
     private string _error = "";
+    private CultureInfo _ruble = CultureInfo.CreateSpecificCulture("ru-RU");
 
     protected override async Task OnInitializedAsync()
     {

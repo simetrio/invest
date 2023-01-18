@@ -52,6 +52,7 @@
 @code {
     private TransactionsDto[] _transactions = Array.Empty<TransactionsDto>();
     private string _error = "";
+    private readonly CultureInfo _dollar = CultureInfo.CreateSpecificCulture("en-US");
 
     protected override async Task OnInitializedAsync()
     {

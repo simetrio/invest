@@ -117,8 +117,8 @@
                 <td>@operation.DateTime</td>
                 <td>@operation.Type</td>
                 <td>@operation.Count</td>
-                <td>@operation.Price</td>
-                <td>@operation.DollarPrice</td>
+                <td>@operation.Price.ToString("C", _dollar)</td>
+                <td>@operation.DollarPrice.ToString("C", _dollar)</td>
                 <td>@operation.Country</td>
                 <td>
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @onclick="@(_ => Delete(operation.Id))"></button>
@@ -142,6 +142,7 @@
     private string _country = "";
     private string _error = "";
     private string _year = "";
+    private readonly CultureInfo _dollar = CultureInfo.CreateSpecificCulture("en-US");
 
     protected override async Task OnInitializedAsync()
     {
