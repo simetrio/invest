@@ -86,13 +86,13 @@
     </div>
 </div>
 
+<hr/>
+
 @foreach (var year in _operations.Years)
 {
-    <hr/>
+    <h3>Операции за @year год</h3>
 
-    <h4>Операции за @year год</h4>
-
-    <table width="100%">
+    <table class="table table-hover my-5">
         <thead>
         <tr>
             <th>Ид</th>
@@ -121,7 +121,7 @@
                 <td>@operation.DollarPrice</td>
                 <td>@operation.Country</td>
                 <td>
-                    <button @onclick="@(_ => Delete(operation.Id))">&#10060;</button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @onclick="@(_ => Delete(operation.Id))"></button>
                 </td>
             </tr>
         }

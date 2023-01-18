@@ -6,18 +6,21 @@
 
 <h1>Сделки</h1>
 
-<div>@_error</div>
+<hr/>
+
+@if (!string.IsNullOrEmpty(_error))
+{
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <div>@_error</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @onclick="CloseError"></button>
+    </div>
+}
 
 @foreach (var transactions in _transactions)
 {
-    <hr/>
-
-    <h4>Сделки за @transactions.Year год</h4>
-    <div>
-        <button @onclick="@(_ => Delete(transactions.Year))">Удалить</button>
-    </div>
-
-    <table width="100%">
+    <h3>Сделки за @transactions.Year год</h3>
+   
+    <table class="table table-hover mt-4">
         <thead>
         <tr>
             <th>Тикер</th>
@@ -40,6 +43,10 @@
         }
         </tbody>
     </table>
+    
+    <p class="mb-5">
+        <button class="btn btn-primary" @onclick="@(_ => Delete(transactions.Year))">Удалить</button>
+    </p>
 }
 
 @code {
@@ -63,6 +70,11 @@
             _error = e.Message;
             Console.WriteLine(e);
         }
+    }
+
+    private void CloseError()
+    {
+        _error = "";
     }
 
     private async Task ReadTransactions()
