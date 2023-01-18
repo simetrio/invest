@@ -6,96 +6,85 @@
 
 <h1>Операции</h1>
 
-<table>
-    <tr>
-        <td>Ид:</td>
-        <td>
-            <input @bind="@_id" @bind:event="oninput"/>
-        </td>
-    </tr>
-    <tr>
-        <td>Ид родителя:</td>
-        <td>
-            <input @bind="@_parentId" @bind:event="oninput"/>
-        </td>
-    </tr>
-    <tr>
-        <td>Тикер:</td>
-        <td>
-            <input @bind="@_ticker" @bind:event="oninput" placeholder="CDV"/>
-        </td>
-    </tr>
-    <tr>
-        <td>Дата и время:</td>
-        <td>
-            <input @bind="@_dateTime" @bind:event="oninput" placeholder="01.01.2000 12:00"/>
-        </td>
-    </tr>
-    <tr>
-        <td>Тип:</td>
-        <td>
-            <select @bind="@_type">
-                <option value="">-- выберите тип операции</option>
-                @foreach (var type in GetTypes<OperationType>())
-                {
-                    <option value="@type">@type</option>
-                }
-            </select>
-        </td>
-    </tr>
-    <tr>
-        <td>Кол-во:</td>
-        <td>
-            <input @bind="@_count" @bind:event="oninput"/>
-        </td>
-    </tr>
-    <tr>
-        <td>Цена:</td>
-        <td>
-            <input @bind="@_price" @bind:event="oninput" placeholder="151,16"/>
-        </td>
-    </tr>
-    <tr>
-        <td>Курс доллара:</td>
-        <td>
-            <input @bind="@_dollarPrice" @bind:event="oninput" placeholder="71,25"/>
-        </td>
-    </tr>
-    <tr>
-        <td>Страна:</td>
-        <td>
-            <select @bind="@_country">
-                <option value="">-- выберите страну</option>
-                @foreach (var country in GetTypes<Country>())
-                {
-                    <option value="@country">@country</option>
-                }
-            </select>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">
-            <button @onclick="Create">Добавить</button>
-        </td>
-    </tr>
-    <tr>
-        <td colspan="2">@_error</td>
-    </tr>
-</table>
+@if (!string.IsNullOrEmpty(_error))
+{
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <div>@_error</div>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" @onclick="CloseError"></button>
+    </div>
+}
 
 <hr/>
 
-<table>
-    <tr>
-        <td>Создать отчет за:</td>
-        <td>
-            <input @bind="@_year" @bind:event="oninput"/>
-        </td>
-        <td>
-            <button @onclick="CreateReport">Создать</button>
-        </td>
-    </tr>
-</table>
+<h3>Новая операция</h3>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <label for="id" class="form-label">Ид</label>
+        <input type="text" class="form-control" id="id" @bind="@_id" @bind:event="oninput">
+    </div>
+    <div class="col-md-4">
+        <label for="parentId" class="form-label">Ид родителя</label>
+        <input type="text" class="form-control" id="parentId" @bind="@_parentId" @bind:event="oninput">
+    </div>
+    <div class="col-md-4">
+        <label for="ticker" class="form-label">Тикер</label>
+        <input type="text" class="form-control" id="ticker" @bind="@_ticker" @bind:event="oninput" placeholder="CDV">
+    </div>
+    <div class="col-md-4">
+        <label for="dateTime" class="form-label">Дата и время</label>
+        <input type="text" class="form-control" id="dateTime" @bind="@_dateTime" @bind:event="oninput" placeholder="01.01.2000 12:00">
+    </div>
+    <div class="col-md-4">
+        <label for="type" class="form-label">Тип</label>
+        <select class="form-select mb-3" id="type" @bind="@_type">
+            <option value="">-- выберите тип операции</option>
+            @foreach (var type in GetTypes<OperationType>())
+            {
+                <option value="@type">@type</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label for="country" class="form-label">Страна</label>
+        <select class="form-select mb-3" id="country" @bind="@_country">
+            <option value="">-- выберите страну</option>
+            @foreach (var country in GetTypes<Country>())
+            {
+                <option value="@country">@country</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label for="count" class="form-label">Кол-во</label>
+        <input type="text" class="form-control" id="count" @bind="@_count" @bind:event="oninput">
+    </div>
+    <div class="col-md-4">
+        <label for="oninput" class="form-label">Цена</label>
+        <input type="text" class="form-control" id="oninput" @bind="@_price" @bind:event="oninput" placeholder="151,16">
+    </div>
+    <div class="col-md-4">
+        <label for="dollarPrice" class="form-label">Курс доллара</label>
+        <input type="text" class="form-control" id="dollarPrice" @bind="@_dollarPrice" @bind:event="oninput" placeholder="71,25">
+    </div>
+    <div class="col-md-12">
+        <button class="btn btn-primary" @onclick="Create">Добавить</button>
+    </div>
+</div>
+
+<hr/>
+
+<div class="row g-3">
+    <h3>Новый отчет</h3>
+
+    <div class="col-md-3">
+        <input type="text" class="form-control" id="year" @bind="@_year" @bind:event="oninput" placeholder="Укажите год">
+    </div>
+
+    <div class="col-md-3">
+        <button class="btn btn-primary" @onclick="CreateReport">Добавить</button>
+    </div>
+</div>
 
 @foreach (var year in _operations.Years)
 {
@@ -205,6 +194,11 @@
             _error = e.Message;
             Console.WriteLine(e);
         }
+    }
+
+    private void CloseError()
+    {
+        _error = "";
     }
 
     private async Task ReadOperations()
